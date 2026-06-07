@@ -1,0 +1,15 @@
+# dependencias
+node_modules/
+# build
+.next/
+out/
+dist/
+# entorno
+.env
+.env*.local
+# planes locales (no se versionan)
+docs/superpowers/plans/
+# logs / sistema
+*.log
+.DS_Store
+Thumbs.db
