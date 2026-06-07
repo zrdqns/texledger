@@ -19,7 +19,7 @@ Sistema web de gestión contable y operativa para una empresa de manufactura tex
 
 ## 3. Stack y arquitectura (fijados por el prompt maestro)
 
-- **Framework:** Next.js 15 (App Router, Server Components, Server Actions) + TypeScript strict.
+- **Framework:** Next.js 16 (App Router, Server Components, Server Actions) + TypeScript strict.
 - **Backend/datos:** Supabase — Postgres + Auth (email/password) + Storage (comprobantes/facturas) + RLS.
 - **Operaciones atómicas:** funciones Postgres (RPC `SECURITY DEFINER`).
 - **Validación:** Zod (cliente + servidor). **Formularios:** react-hook-form + Zod. **Estado/datos cliente:** TanStack Query.
