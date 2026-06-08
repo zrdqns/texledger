@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { obtenerTela } from "@/modules/inventario/application/telas-actions";
 import { listarKardex } from "@/modules/inventario/application/movimientos-actions";
 import { MovimientoModal } from "@/modules/inventario/presentation/movimiento-modal";
+import { RetirarTelaBoton } from "@/modules/inventario/presentation/retirar-tela-boton";
 import { formatFechaBogota } from "@/shared/fecha";
 
 export default async function TelaDetallePage({ params }: { params: Promise<{ id: string }> }) {
@@ -12,12 +14,18 @@ export default async function TelaDetallePage({ params }: { params: Promise<{ id
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-lg font-semibold text-zinc-100">{tela.referencia}</h2>
-        <p className="text-sm text-zinc-400">{tela.descripcion}</p>
-        <p className="mt-2 text-2xl font-semibold text-zinc-100">
-          {tela.stock_actual_m} <span className="text-sm font-normal text-zinc-500">{tela.unidad}</span>
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h2 className="text-lg font-semibold text-zinc-100">{tela.referencia}</h2>
+          <p className="text-sm text-zinc-400">{tela.descripcion}</p>
+          <p className="mt-2 text-2xl font-semibold text-zinc-100">
+            {tela.stock_actual_m} <span className="text-sm font-normal text-zinc-500">{tela.unidad}</span>
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link href={`/inventario/${tela.id}/editar`} className="text-sm text-zinc-300 hover:text-zinc-100">Editar</Link>
+          <RetirarTelaBoton telaId={tela.id} />
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
