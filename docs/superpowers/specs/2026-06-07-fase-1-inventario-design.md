@@ -23,7 +23,7 @@ Inventario de tela operable de forma autónoma (antes de Pedidos/Fase 2): catál
 - id (uuid pk), referencia (text, **único**), descripcion, composicion, color, ancho_m (numeric null), gramaje_gm2 (numeric null), proveedor (null), unidad (text default `metros`), **stock_actual_m (numeric not null default 0)**, paquetes_rollos (int null), umbral_bajo_stock_m (numeric not null), consumo_prenda_m (numeric null), lote (null), ubicacion (null), **activo (boolean not null default true)**, created_at, updated_at (timestamptz).
 
 **`movimientos_inventario`** (kardex):
-- id (uuid pk), tela_id (fk telas), tipo (text check ∈ {`entrada`,`salida`,`devolucion`,`ajuste`}), origen (text check ∈ {`rollo`,`pedido`,`importacion`,`manual`}), **cantidad_m (numeric not null)** — delta con signo (negativo en salidas y en ajustes a la baja), prendas (numeric null), consumo_aplicado (numeric null), pedido_id (uuid null, fk pedidos en Fase 2), **saldo_resultante_m (numeric not null)** — balance absoluto resultante tras el movimiento, nota (text null), usuario_id (uuid null), created_at (timestamptz).
+- id (uuid pk), tela_id (fk telas), tipo (text check ∈ {`entrada`,`salida`,`devolucion`,`ajuste`}), origen (text check ∈ {`rollo`,`pedido`,`importacion`,`manual`}), **cantidad_m (numeric not null)** — delta con signo (negativo en salidas y en ajustes a la baja), prendas (**integer null**, `CHECK (prendas > 0)` cuando no es null), consumo_aplicado (numeric null), pedido_id (uuid null, **sin FK en 0002**; el constraint se agrega en `0003_pedidos.sql` con `ALTER TABLE movimientos_inventario ADD CONSTRAINT fk_pedido FOREIGN KEY (pedido_id) REFERENCES pedidos(id)`), **saldo_resultante_m (numeric not null)** — balance absoluto resultante tras el movimiento, nota (text null), usuario_id (uuid null), created_at (timestamptz).
 - En Fase 1 se usan `tipo` ∈ {entrada, salida, ajuste} y `origen` ∈ {rollo, manual, importacion}.
 
 **Transversal:** RLS `authenticated` en ambas tablas; trigger `updated_at` en `telas`; índices en `telas(referencia)` (único) y `movimientos_inventario(tela_id, created_at)`.
@@ -38,8 +38,8 @@ Inventario de tela operable de forma autónoma (antes de Pedidos/Fase 2): catál
 Reglas comunes: `EXECUTE` revocado a `anon` y `authenticated`; las Server Actions las invocan con service role tras `getUser()` + validación Zod. `SELECT ... FOR UPDATE` sobre la tela. `stock_actual_m` se muta **solo** aquí; cada RPC inserta el movimiento con `cantidad_m` (con signo) y `saldo_resultante_m` (absoluto).
 
 - **`registrar_entrada_tela(p_tela_id uuid, p_metros numeric, p_nota text)`**: valida `p_metros > 0`; `cantidad_m = +p_metros`, tipo `entrada`, origen `rollo`; sube stock; retorna nuevo stock.
-- **`registrar_salida_tela(p_tela_id uuid, p_modo text, p_prendas numeric, p_consumo numeric, p_metros numeric, p_nota text)`**: si `p_modo='prenda'` → `metros = p_prendas × p_consumo` (exige ambos > 0); si `p_modo='metros'` → `metros = p_metros` (> 0). Valida `metros ≤ stock_actual_m` (**rechaza** si no alcanza; sin negativos). `cantidad_m = −metros`, tipo `salida`, origen `manual`; guarda `prendas`/`consumo_aplicado` cuando aplique; baja stock.
-- **`registrar_ajuste_tela(p_tela_id uuid, p_stock_contado numeric, p_nota text)`**: valida `p_stock_contado ≥ 0`; `delta = p_stock_contado − stock_actual_m`; `cantidad_m = delta` (con signo), tipo `ajuste`, origen `manual`; setea `stock_actual_m = p_stock_contado`; `saldo_resultante_m = p_stock_contado`.
+- **`registrar_salida_tela(p_tela_id uuid, p_modo text, p_prendas integer, p_consumo numeric, p_metros numeric, p_nota text)`**: si `p_modo='prenda'` → `metros = p_prendas × p_consumo` (exige ambos > 0); si `p_modo='metros'` → `metros = p_metros` (> 0). Valida `metros ≤ stock_actual_m` (**rechaza** si no alcanza; sin negativos). `cantidad_m = −metros`, tipo `salida`, origen `manual`; guarda `prendas`/`consumo_aplicado` cuando aplique; baja stock.
+- **`registrar_ajuste_tela(p_tela_id uuid, p_stock_contado numeric, p_nota text)`**: valida `p_stock_contado ≥ 0`; `delta = p_stock_contado − stock_actual_m`; **rechaza si `delta = 0`** (`RAISE EXCEPTION 'sin diferencia'`) para no contaminar el kardex con no-ops; `cantidad_m = delta` (con signo), tipo `ajuste`, origen `manual`; setea `stock_actual_m = p_stock_contado`; `saldo_resultante_m = p_stock_contado`.
 - **`importar_inventario(p_filas jsonb)`**: por fila crea `tela` (stock 0) e inserta entrada(`importacion`) con `metraje_inicial_m` (`cantidad_m = +metraje`, sube stock). **Rechaza** la transacción completa si alguna `referencia` ya existe (segunda línea de defensa; la dedup principal ocurre en la Server Action). Retorna resumen (creadas, metros totales).
 
 ## 5. Dominio puro (TDD con Vitest, en `src/modules/inventario/domain/`)
@@ -50,9 +50,20 @@ Reglas comunes: `EXECUTE` revocado a `anon` y `authenticated`; las Server Action
 
 ## 6. Aplicación (Server Actions, `src/modules/inventario/application/`)
 
+**Contrato de retorno de toda Server Action** (en `src/shared/action-result.ts`), para que la UI maneje errores de forma uniforme:
+```ts
+type ActionResult<T = void> =
+  | { ok: true; data: T }
+  | { ok: false; code: "VALIDATION" | "BUSINESS" | "UNEXPECTED"; message: string };
+```
+- `VALIDATION`: falló Zod (entrada mal formada).
+- `BUSINESS`: error de negocio devuelto por la RPC (stock insuficiente, referencia duplicada, "sin diferencia"). Se mapea el error de Postgres a un mensaje legible.
+- `UNEXPECTED`: cualquier otra excepción (se loguea en servidor; mensaje genérico al cliente).
+- `redirect()` no aplica aquí (las acciones de inventario revalidan y se quedan en la página); el éxito retorna `{ ok: true, data }`.
+
 - **Telas:** `crearTela` (metadata, stock 0), `editarTela` (metadata/umbral/consumo), `retirarTela` (**UPDATE directo** `telas SET activo=false` con service role + `getUser()`; sin RPC, sin efecto en stock/kardex).
 - **Movimientos:** `registrarEntrada`, `registrarSalida`, `registrarAjuste` → validan con Zod, hacen `getUser()`, llaman la RPC correspondiente con service role.
-- **Import:** `previsualizarImport(file)` → parsea Excel con SheetJS, valida estructura/tipos fila a fila con Zod, y **consulta referencias existentes** (`SELECT referencia FROM telas WHERE referencia = ANY(...)`) para marcar duplicados; retorna { válidas, inválidas (con motivo), duplicadas }. `confirmarImport(filasValidas)` → llama `importar_inventario` (que igual rebota duplicados como defensa).
+- **Import:** `previsualizarImport(file)` → parsea Excel con SheetJS, valida estructura/tipos fila a fila con Zod, **deduplica el array de referencias del propio archivo** (si una referencia aparece en dos filas → se marca como duplicada intra-archivo), y **consulta referencias existentes** en DB (`SELECT referencia FROM telas WHERE referencia = ANY(...)`) para marcar duplicados contra el catálogo; retorna { válidas, inválidas (con motivo), duplicadas (intra-archivo o en DB) }. `confirmarImport(filasValidas)` → llama `importar_inventario` (que igual rebota duplicados como segunda línea de defensa).
 
 ## 7. Presentación (`src/modules/inventario/presentation/` + rutas)
 
