@@ -17,7 +17,7 @@ Historial de pedidos con conciliación de saldo de tela. Cada pedido consume tel
 ## 3. Modelo de datos (migración `0004_pedidos.sql`)
 
 **`pedidos`**:
-- id (uuid pk default gen_random_uuid()), empresa_cliente (text not null), fecha (date not null default current_date), tela_id (uuid not null references telas(id) on delete restrict), metros_llegados_planta (numeric not null check > 0), prendas_pedidas (integer not null check > 0), consumo_prenda_m (numeric not null check > 0), metros_consumidos (numeric), saldo_tela_m (numeric) — **sin CHECK ≥ 0** (puede ser negativo en déficit), estado (text not null default 'borrador' check in ('borrador','confirmado','cerrado','anulado')), nota (text), usuario_id (uuid), created_at/updated_at (timestamptz). Trigger `updated_at`.
+- id (uuid pk default gen_random_uuid()), empresa_cliente (text not null), fecha (date not null default current_date), tela_id (uuid not null references telas(id) on delete restrict), metros_llegados_planta (numeric not null check > 0), prendas_pedidas (integer not null check > 0), consumo_prenda_m (numeric not null check > 0), metros_consumidos (numeric), saldo_tela_m (numeric) — **sin CHECK ≥ 0** (puede ser negativo en déficit), estado (text not null default 'borrador' check in ('borrador','confirmado','cerrado','anulado')), nota (text), usuario_id (uuid **not null references auth.users(id)**), created_at/updated_at (timestamptz). Trigger `updated_at`.
 - `metros_consumidos` y `saldo_tela_m` quedan null mientras `borrador`; se calculan al confirmar.
 
 **FK diferido de Fase 1:**
@@ -57,7 +57,7 @@ Idempotente y con guardas de estado:
 ## 6. Aplicación (Server Actions, `src/modules/pedidos/application/`)
 
 Usan el contrato `ActionResult<T>` de `src/shared/action-result.ts` y `mapRpcError` (de Fase 1).
-- `crearPedido` (Zod; inserta borrador vía service-role).
+- `crearPedido` (Zod; inserta borrador vía service-role; setea `usuario_id` desde `getUser()`).
 - `editarPedido` (solo si `borrador`; valida estado antes de actualizar).
 - `confirmarPedido` / `anularPedido` (RPC vía service-role; `mapRpcError`).
 - `cerrarPedido` (directo: `confirmado → cerrado`).
