@@ -56,6 +56,8 @@ create trigger trg_sync_factura_egresos after insert or update or delete on egre
   for each row execute function public.sync_factura_estado();
 ```
 > El `EXISTS` contra ingresos **y** egresos garantiza que un DELETE en una tabla corrija el estado aunque el pago original estuviera en la otra.
+>
+> **Nota para fases futuras:** este trigger maneja correctamente INSERT y DELETE. En Fase 3 no existe `editarIngreso`/`editarEgreso`, así que `factura_id` nunca cambia en un UPDATE. Si una fase posterior agrega edición de pagos, el trigger debe recalcular **tanto** `old.factura_id` **como** `new.factura_id` cuando `old.factura_id IS DISTINCT FROM new.factura_id` (si no, la factura vieja quedaría `pagada` incorrectamente).
 
 **RLS:** select `authenticated` en las 4 tablas. Escrituras solo vía service-role (Server Actions).
 
@@ -79,6 +81,7 @@ Se guarda el **path** (`carpeta/archivo`) en `archivo_url`/`comprobante_url`, no
 Escritura directa con service-role (no hay operaciones de stock → sin RPC). Contrato `ActionResult`; validación Zod.
 - **Cuentas:** `crearCuenta`, `editarCuenta`, `retirarCuenta` (activo=false), `listarCuentas`.
 - **Facturas:** `crearFactura` (con archivo opcional), `editarFactura`, `listarFacturas` (filtro tipo/estado/declarada), `obtenerFactura`, `alternarDeclarada`.
+  - **Inmutabilidad post-pago:** si `estado = 'pagada'`, `editarFactura` **rechaza** cambios a `tipo`, `numero`, `tercero`, `valor` y `fecha_emision` (devuelve `BUSINESS`: "no se puede editar una factura pagada"); solo `nota` y `archivo` quedan editables. (`declarada` se cambia por su propia acción.)
 - **Ingresos / Egresos:** `crearIngreso` / `crearEgreso` (FormData con archivo opcional + factura opcional), `listarIngresos` / `listarEgresos`.
 - **Reporte:** `consultarReporte(desde, hasta)` → `{ ingresos, egresos, totales }` (usa `calcularTotalesReporte`).
 - **Archivos:** helper `subirArchivo(file, carpeta, id)` → path; `urlFirmada(path)` → signed URL (60s). Mapean errores a `ActionResult`.
