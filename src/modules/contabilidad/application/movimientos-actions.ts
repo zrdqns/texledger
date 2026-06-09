@@ -6,7 +6,7 @@ import { createClient } from "@/core/supabase/server";
 import { createAdminClient } from "@/core/supabase/admin";
 import { ok, fail, type ActionResult } from "@/shared/action-result";
 import { ingresoSchema, egresoSchema } from "./schemas";
-import { subirArchivo } from "./archivos";
+import { subirArchivo, validarArchivo } from "./archivos";
 import type { Ingreso, Egreso } from "../domain/tipos";
 
 function opt(v: FormDataEntryValue | null): string | undefined {
@@ -39,6 +39,8 @@ export async function crearIngreso(formData: FormData): Promise<ActionResult> {
     cuenta_bancaria_id: opt(formData.get("cuenta_bancaria_id")),
   });
   if (!parsed.success) return fail("VALIDATION", parsed.error.issues[0]?.message ?? "Datos inválidos");
+  const va = validarArchivo(formData.get("archivo"));
+  if (!va.ok) return fail("VALIDATION", va.mensaje);
 
   const admin = createAdminClient();
   const { data, error } = await admin.from("ingresos").insert(parsed.data).select("id").single();
@@ -70,6 +72,8 @@ export async function crearEgreso(formData: FormData): Promise<ActionResult> {
     factura_id: opt(formData.get("factura_id")),
   });
   if (!parsed.success) return fail("VALIDATION", parsed.error.issues[0]?.message ?? "Datos inválidos");
+  const va = validarArchivo(formData.get("archivo"));
+  if (!va.ok) return fail("VALIDATION", va.mensaje);
 
   const admin = createAdminClient();
   const { data, error } = await admin.from("egresos").insert(parsed.data).select("id").single();
