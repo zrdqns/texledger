@@ -16,7 +16,7 @@ export default async function IngresosPage() {
         <Link href="/contabilidad/ingresos/nuevo" className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-500">Nuevo ingreso</Link>
       </div>
       {ingresos.length === 0 ? <p className="text-sm text-zinc-500">No hay ingresos.</p> : (
-        <table className="w-full text-sm">
+        <table className="w-full text-sm [&_td]:pr-4 [&_th]:pr-4">
           <thead className="text-left text-zinc-400"><tr className="border-b border-zinc-800">
             <th className="py-2 font-medium">Fecha</th><th className="py-2 font-medium">Concepto</th>
             <th className="py-2 font-medium text-right">Valor</th><th className="py-2 font-medium">Comprobante</th>
