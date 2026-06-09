@@ -2,18 +2,28 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { crearPedido } from "../application/pedidos-actions";
+import { crearPedido, editarPedido } from "../application/pedidos-actions";
 import { calcularConciliacion } from "../domain/conciliacion";
 import { hoyBogota } from "@/shared/fecha";
 
 type TelaOpcion = { id: string; referencia: string; descripcion: string; consumo_prenda_m: number | null };
+type PedidoInicial = {
+  id: string;
+  empresa_cliente: string;
+  fecha: string;
+  tela_id: string;
+  metros_llegados_planta: number;
+  prendas_pedidas: number;
+  consumo_prenda_m: number;
+  nota: string | null;
+};
 
-export function PedidoForm({ telas }: { telas: TelaOpcion[] }) {
+export function PedidoForm({ telas, pedido }: { telas: TelaOpcion[]; pedido?: PedidoInicial }) {
   const router = useRouter();
-  const [telaId, setTelaId] = useState("");
-  const [prendas, setPrendas] = useState("");
-  const [metros, setMetros] = useState("");
-  const [consumo, setConsumo] = useState("");
+  const [telaId, setTelaId] = useState(pedido?.tela_id ?? "");
+  const [prendas, setPrendas] = useState(pedido ? String(pedido.prendas_pedidas) : "");
+  const [metros, setMetros] = useState(pedido ? String(pedido.metros_llegados_planta) : "");
+  const [consumo, setConsumo] = useState(pedido ? String(pedido.consumo_prenda_m) : "");
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -33,7 +43,7 @@ export function PedidoForm({ telas }: { telas: TelaOpcion[] }) {
     setError(null);
     setPending(true);
     const fd = new FormData(e.currentTarget);
-    const res = await crearPedido({
+    const payload = {
       empresa_cliente: (fd.get("empresa_cliente") as string)?.trim(),
       fecha: fd.get("fecha") as string,
       tela_id: telaId,
@@ -41,10 +51,18 @@ export function PedidoForm({ telas }: { telas: TelaOpcion[] }) {
       prendas_pedidas: nP,
       consumo_prenda_m: nC,
       nota: ((fd.get("nota") as string)?.trim()) || undefined,
-    });
-    setPending(false);
-    if (!res.ok) { setError(res.message); return; }
-    router.push(`/pedidos/${res.data.id}`);
+    };
+    if (pedido) {
+      const res = await editarPedido({ ...payload, id: pedido.id });
+      setPending(false);
+      if (!res.ok) { setError(res.message); return; }
+      router.push(`/pedidos/${pedido.id}`);
+    } else {
+      const res = await crearPedido(payload);
+      setPending(false);
+      if (!res.ok) { setError(res.message); return; }
+      router.push(`/pedidos/${res.data.id}`);
+    }
     router.refresh();
   }
 
@@ -53,10 +71,10 @@ export function PedidoForm({ telas }: { telas: TelaOpcion[] }) {
   return (
     <form onSubmit={onSubmit} className="grid max-w-2xl gap-4 sm:grid-cols-2">
       <label className="flex flex-col gap-1 text-sm text-zinc-400">Empresa/Cliente *
-        <input name="empresa_cliente" required className={input} />
+        <input name="empresa_cliente" required defaultValue={pedido?.empresa_cliente} className={input} />
       </label>
       <label className="flex flex-col gap-1 text-sm text-zinc-400">Fecha *
-        <input name="fecha" type="date" required defaultValue={hoyBogota()} className={input} />
+        <input name="fecha" type="date" required defaultValue={pedido?.fecha ?? hoyBogota()} className={input} />
       </label>
       <label className="flex flex-col gap-1 text-sm text-zinc-400 sm:col-span-2">Tela *
         <select required value={telaId} onChange={(e) => onTela(e.target.value)} className={input}>
@@ -76,7 +94,7 @@ export function PedidoForm({ telas }: { telas: TelaOpcion[] }) {
         <input type="number" min="0" step="any" value={consumo} onChange={(e) => setConsumo(e.target.value)} required className={input} />
       </label>
       <label className="flex flex-col gap-1 text-sm text-zinc-400">Nota
-        <input name="nota" className={input} />
+        <input name="nota" defaultValue={pedido?.nota ?? undefined} className={input} />
       </label>
 
       {previo && (
@@ -91,7 +109,7 @@ export function PedidoForm({ telas }: { telas: TelaOpcion[] }) {
       {error && <p className="text-sm text-red-400 sm:col-span-2">{error}</p>}
       <div className="sm:col-span-2">
         <button type="submit" disabled={pending} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
-          {pending ? "Guardando…" : "Crear borrador"}
+          {pending ? "Guardando…" : pedido ? "Guardar cambios" : "Crear borrador"}
         </button>
       </div>
     </form>
