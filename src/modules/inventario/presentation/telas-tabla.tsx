@@ -8,7 +8,7 @@ export function TelasTabla({ telas }: { telas: Tela[] }) {
     return <p className="text-sm text-zinc-500">No hay telas registradas.</p>;
   }
   return (
-    <table className="w-full text-sm">
+    <table className="w-full text-sm [&_td]:pr-4 [&_th]:pr-4">
       <thead className="text-left text-zinc-400">
         <tr className="border-b border-zinc-800">
           <th className="py-2 font-medium">Referencia</th>

@@ -19,7 +19,7 @@ export default async function FacturasPage() {
       {facturas.length === 0 ? (
         <p className="text-sm text-zinc-500">No hay facturas.</p>
       ) : (
-        <table className="w-full text-sm">
+        <table className="w-full text-sm [&_td]:pr-4 [&_th]:pr-4">
           <thead className="text-left text-zinc-400">
             <tr className="border-b border-zinc-800">
               <th className="py-2 font-medium">Fecha</th><th className="py-2 font-medium">Tipo</th>
