@@ -22,7 +22,12 @@ export default async function PedidoDetallePage({ params }: { params: Promise<{ 
           <h2 className="mt-2 text-lg font-semibold text-zinc-100">{p.empresa_cliente}</h2>
           <p className="text-sm text-zinc-400">{formatFechaBogota(p.fecha)} · <span className="capitalize">{p.estado}</span></p>
         </div>
-        <PedidoAcciones id={p.id} estado={p.estado} />
+        <div className="flex flex-col items-end gap-2">
+          {p.estado === "borrador" && (
+            <Link href={`/pedidos/${p.id}/editar`} className="text-sm text-zinc-300 hover:text-zinc-100">Editar</Link>
+          )}
+          <PedidoAcciones id={p.id} estado={p.estado} />
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
