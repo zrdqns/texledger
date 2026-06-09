@@ -6,7 +6,7 @@ import { createClient } from "@/core/supabase/server";
 import { createAdminClient } from "@/core/supabase/admin";
 import { ok, fail, type ActionResult } from "@/shared/action-result";
 import { facturaSchema, editarFacturaSchema } from "./schemas";
-import { subirArchivo } from "./archivos";
+import { subirArchivo, validarArchivo } from "./archivos";
 import type { Factura } from "../domain/tipos";
 
 export async function listarFacturas(filtros?: { tipo?: string; estado?: string; declarada?: boolean }): Promise<Factura[]> {
@@ -38,6 +38,8 @@ export async function crearFactura(formData: FormData): Promise<ActionResult<{ i
     nota: (formData.get("nota") as string) || undefined,
   });
   if (!parsed.success) return fail("VALIDATION", parsed.error.issues[0]?.message ?? "Datos inválidos");
+  const va = validarArchivo(formData.get("archivo"));
+  if (!va.ok) return fail("VALIDATION", va.mensaje);
 
   const admin = createAdminClient();
   const { data, error } = await admin.from("facturas").insert(parsed.data).select("id").single();
