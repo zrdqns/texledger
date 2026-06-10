@@ -11,7 +11,7 @@ const items = [
 
 export function Sidebar() {
   return (
-    <aside className="flex w-60 flex-col gap-1 border-r border-zinc-800 bg-zinc-900/40 p-4">
+    <aside className="flex w-60 flex-col gap-1 border-r border-zinc-800 bg-zinc-900/40 p-4 print:hidden">
       <div className="mb-6 px-2 text-sm font-semibold text-zinc-300">
         Contable Textil
       </div>
