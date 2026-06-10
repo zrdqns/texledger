@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { obtenerLiquidacion } from "@/modules/nomina/application/liquidaciones-actions";
 import { formatCOP } from "@/shared/cop";
-import { formatFechaBogota } from "@/shared/fecha";
+import { TZ_BOGOTA } from "@/shared/fecha";
 import { formatPeriodo } from "@/modules/nomina/presentation/meses";
 import { ImprimirBoton } from "@/modules/nomina/presentation/imprimir-boton";
 
@@ -26,7 +26,9 @@ export default async function DesprendiblePage({ params }: { params: Promise<{ i
               {formatPeriodo(liq.periodo_anio, liq.periodo_mes)} · {liq.dias_laborados} días laborados
             </p>
           </div>
-          <p className="text-sm text-zinc-400">Generado: {formatFechaBogota(liq.created_at.slice(0, 10))}</p>
+          <p className="text-sm text-zinc-400">
+            Generado: {new Intl.DateTimeFormat("es-CO", { timeZone: TZ_BOGOTA, day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date(liq.created_at))}
+          </p>
         </div>
 
         <div className="mt-4 grid gap-1 text-sm">
