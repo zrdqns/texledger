@@ -37,13 +37,13 @@ export async function crearLiquidacion(input: unknown): Promise<ActionResult<{ i
   const insumos = parsed.data;
 
   const supabase = await createClient();
-  const { data: empleado } = await supabase
-    .from("empleados").select("*").eq("id", insumos.empleado_id).maybeSingle();
+  const [{ data: empleado }, { data: parametro }] = await Promise.all([
+    supabase.from("empleados").select("*").eq("id", insumos.empleado_id).maybeSingle(),
+    supabase.from("parametros_nomina").select("*").eq("anio", insumos.periodo_anio).maybeSingle(),
+  ]);
   if (!empleado) return fail("BUSINESS", "Empleado no encontrado");
   const emp = empleado as Empleado;
 
-  const { data: parametro } = await supabase
-    .from("parametros_nomina").select("*").eq("anio", insumos.periodo_anio).maybeSingle();
   if (!parametro) {
     return fail("BUSINESS", `No hay parámetros para el año ${insumos.periodo_anio}: configúralos en Nómina → Parámetros`);
   }
