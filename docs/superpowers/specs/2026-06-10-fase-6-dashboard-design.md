@@ -21,12 +21,13 @@ Reemplazar el placeholder de `/dashboard` por datos reales: 4 cards del mes actu
 
 ## 3. Dominio puro (TDD, `src/modules/dashboard/domain/`)
 
-- `ultimosMeses(hoy: string, n: number): string[]` — claves `YYYY-MM` de los últimos n meses incluyendo el actual, viejo→nuevo. Tests: n=12 cruzando año.
+- `ultimosMeses(hoy: string, n: number): string[]` — **recibe `hoy` en `YYYY-MM-DD`** (la salida de `hoyBogota()`) y extrae `YYYY-MM` internamente; devuelve claves `YYYY-MM` de los últimos n meses incluyendo el actual, viejo→nuevo. Tests: n=12 cruzando año.
 - `agregarPorMes(ingresos: { fecha: string; valor: number }[], egresos: { fecha: string; valor: number }[], meses: string[]): { mes: string; ingresos: number; egresos: number }[]` — serie con **zero-fill** de meses sin datos; ignora filas cuyo `YYYY-MM` no esté en `meses`. Tests: zero-fill, suma por mes, orden, descarte fuera de rango.
 - `mezclarMovimientos(ingresos: Movimiento[], egresos: Movimiento[], n: number)` con `Movimiento = { id, fecha, concepto, valor, created_at }` — devuelve `{ tipo: 'ingreso' | 'egreso', ...Movimiento }[]` ordenado por `fecha` desc (desempate `created_at` desc), primeros n. Tests: mezcla, orden, desempate, límite.
 - `restarDias(fecha: string, n: number): string` — resta n días a una fecha `YYYY-MM-DD` (para el límite de 30 días). Tests: cruce de mes y de año.
 - `contarBajoStock(telas: { stock_actual_m: number; umbral_bajo_stock_m: number }[]): number` — count de `stock < umbral`. Test directo.
-- Cards del mes: reusa **`calcularTotalesReporte`** (dominio contabilidad) con las filas filtradas al mes actual; stock total = suma de `stock_actual_m` de las telas activas ya traídas.
+- Cards del mes: reusa **`calcularTotalesReporte`** del dominio contabilidad — firma genérica verificada: `calcularTotalesReporte(ingresos: { valor: number }[], egresos: { valor: number }[])` (`src/modules/contabilidad/domain/reporte.ts`), acepta las filas del dashboard sin adaptador.
+- **Excepción consciente al patrón TDD:** el stock total (`reduce` de `stock_actual_m` sobre las telas activas ya traídas) se calcula inline en la action por trivialidad; queda fuera de Vitest a propósito.
 
 ## 4. Aplicación (`src/modules/dashboard/application/dashboard-actions.ts`)
 
@@ -41,14 +42,16 @@ Reemplazar el placeholder de `/dashboard` por datos reales: 4 cards del mes actu
    - count head facturas `estado = 'pendiente'`.
    - count head facturas `declarada = false` y `fecha_emision <= limite30`.
    - count head recordatorios `.or('estado.eq.vencido,and(estado.eq.pendiente,fecha_objetivo.lt.<hoy>)')`.
-4. Normaliza egresos (`fecha_pago → fecha`), llama al dominio y arma `ResumenDashboard` (tipado en `domain/tipos.ts`): `{ cards: { ingresosMes, egresosMes, netoMes, stockTotalM }, serie, ultimos, alertas: { bajoStock, facturasPendientes, facturasSinDeclarar, recordatoriosVencidos } }`.
+4. Normaliza egresos (`fecha_pago → fecha`). **Para las cards: filtra en memoria** ingresos y egresos (ya normalizados) a `fecha.startsWith(mesActual)` con `mesActual = hoy.slice(0, 7)` **antes** de pasarlos a `calcularTotalesReporte` — la serie de 12 meses usa las filas completas; las cards solo las del mes actual.
+5. Llama al dominio y arma `ResumenDashboard` (tipado en `domain/tipos.ts`): `{ cards: { ingresosMes, egresosMes, netoMes, stockTotalM }, serie, ultimos, alertas: { bajoStock, facturasPendientes, facturasSinDeclarar, recordatoriosVencidos } }`.
 
 ## 5. Presentación
 
 - **`/dashboard` (`page.tsx`, server):** reemplaza el placeholder — fila de 4 cards (valores `formatCOP`; stock en `m` con `tabular-nums`) → fila de 4 alertas como mini-cards con `Link` y conteo (conteo > 0 resaltado en ámbar) → `<GraficoIngresosEgresos serie={...} />` → tabla de últimos movimientos (badge Ingreso esmeralda / Egreso rojo, `formatFechaBogota`, concepto, valor con signo). Tablas con `[&_td]:pr-4 [&_th]:pr-4`.
 - **`src/modules/dashboard/presentation/grafico-ingresos-egresos.tsx`** (`"use client"`): recharts `BarChart` + `ResponsiveContainer` (altura ~280), barras `#10b981` (ingresos) y `#ef4444` (egresos), eje X `MM/yy`, eje Y compacto (`Intl` notación abreviada), `Tooltip` con fondo oscuro y `formatCOP`. Links de alertas: bajo stock → `/inventario`, pendientes y sin declarar → `/contabilidad/facturas`, vencidos → `/recordatorios`.
+- **Manejo de fallo y carga del segmento:** `src/app/(protected)/dashboard/error.tsx` (`"use client"`, error boundary de Next con mensaje "No se pudo cargar el dashboard" y botón Reintentar que llama `reset()`) y `src/app/(protected)/dashboard/loading.tsx` (estado de carga simple). Sin esto, un fallo de Supabase rompería la ruta con error sin manejar.
 - Estética oscura actual; pulido fino en Fase 7.
 
 ## 6. Entrega
 
-Rama `fase-6-dashboard` → `npm install recharts` → TDD dominio → action → UI → `/code-review` + `/simplify` → `/security-review` → merge a `main`. Sin migración: el usuario solo prueba `/dashboard` con sus datos reales.
+Rama `fase-6-dashboard` → `npm install recharts` → TDD dominio → action → UI (incluye `error.tsx` y `loading.tsx`) → `/code-review` + `/simplify` → `/security-review` → merge a `main`. Sin migración: el usuario solo prueba `/dashboard` con sus datos reales.
