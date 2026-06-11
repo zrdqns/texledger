@@ -36,6 +36,11 @@ export async function obtenerResumenDashboard(): Promise<ResumenDashboard> {
       .or(`estado.eq.vencido,and(estado.eq.pendiente,fecha_objetivo.lt.${hoy})`),
   ]);
 
+  // Un fallo en cualquier query debe activar error.tsx, no renderizar ceros como datos reales.
+  if ([ingRes, egrRes, telasRes, pendRes, sinDeclRes, vencidosRes].some((r) => r.error)) {
+    throw new Error("No se pudo cargar el resumen del dashboard");
+  }
+
   const ingresos = (ingRes.data ?? []) as Movimiento[];
   const egresos = (
     (egrRes.data ?? []) as { id: string; fecha_pago: string; concepto: string; valor: number; created_at: string }[]
