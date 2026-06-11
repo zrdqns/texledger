@@ -1,5 +1,6 @@
 ﻿import { requireUser } from "@/core/auth/guard";
 import { Sidebar } from "@/components/ui/sidebar";
+import { Campana } from "@/modules/recordatorios/presentation/campana";
 
 export default async function ProtectedLayout({
   children,
@@ -13,11 +14,14 @@ export default async function ProtectedLayout({
       <div className="flex flex-1 flex-col">
         <header className="flex h-14 items-center justify-between border-b border-zinc-800 px-6 print:hidden">
           <h1 className="text-sm font-medium text-zinc-200">Panel</h1>
-          <form action="/auth/signout" method="post">
-            <button className="text-sm text-zinc-400 hover:text-zinc-100">
-              Salir
-            </button>
-          </form>
+          <div className="flex items-center gap-5">
+            <Campana />
+            <form action="/auth/signout" method="post">
+              <button className="text-sm text-zinc-400 hover:text-zinc-100">
+                Salir
+              </button>
+            </form>
+          </div>
         </header>
         <main className="flex-1 p-6 print:p-0">{children}</main>
       </div>
