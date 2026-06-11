@@ -7,13 +7,13 @@ import { createAdminClient } from "@/core/supabase/admin";
 import { ok, fail, mapRpcError, type ActionResult } from "@/shared/action-result";
 import type { Notificacion } from "../domain/tipos";
 
-export async function listarNotificaciones(): Promise<Notificacion[]> {
+export async function listarNotificacionesNoLeidas(): Promise<Notificacion[]> {
   await requireUser();
   const supabase = await createClient();
   const { data } = await supabase
     .from("notificaciones")
     .select("*")
-    .order("leida", { ascending: true })
+    .eq("leida", false)
     .order("created_at", { ascending: false })
     .limit(50);
   return (data ?? []) as Notificacion[];

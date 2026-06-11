@@ -52,9 +52,9 @@ export async function marcarCumplido(id: string): Promise<ActionResult> {
 export async function eliminarRecordatorio(id: string): Promise<ActionResult> {
   await requireUser();
   const admin = createAdminClient();
-  await cerrarNotificacionVencido(admin, id);
   const { error } = await admin.from("recordatorios").delete().eq("id", id);
   if (error) return fail("UNEXPECTED", "Error inesperado");
+  await cerrarNotificacionVencido(admin, id);
   revalidatePath("/recordatorios");
   return ok(undefined);
 }

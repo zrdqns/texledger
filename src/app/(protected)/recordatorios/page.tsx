@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { listarNotificaciones } from "@/modules/recordatorios/application/notificaciones-actions";
+import { listarNotificacionesNoLeidas } from "@/modules/recordatorios/application/notificaciones-actions";
 import { listarRecordatorios } from "@/modules/recordatorios/application/recordatorios-actions";
 import { diasRestantes, esVencido } from "@/modules/recordatorios/domain/estado";
 import type { RecordatorioConFactura } from "@/modules/recordatorios/domain/tipos";
@@ -26,9 +26,8 @@ function BadgeEstado({ r, hoy }: { r: RecordatorioConFactura; hoy: string }) {
 }
 
 export default async function RecordatoriosPage() {
-  const [notificaciones, recordatorios] = await Promise.all([listarNotificaciones(), listarRecordatorios()]);
+  const [noLeidas, recordatorios] = await Promise.all([listarNotificacionesNoLeidas(), listarRecordatorios()]);
   const hoy = hoyBogota();
-  const noLeidas = notificaciones.filter((n) => !n.leida);
 
   return (
     <div className="flex flex-col gap-10">
