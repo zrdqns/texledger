@@ -10,6 +10,18 @@ export function hoyBogota(): string {
   }).format(new Date());
 }
 
+const fmtTimestampBogota = new Intl.DateTimeFormat("es-CO", {
+  timeZone: TZ_BOGOTA,
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+});
+
+/** Formatea un timestamptz ISO (created_at, etc.) a dd/mm/aaaa en America/Bogota. */
+export function formatTimestampBogota(iso: string): string {
+  return fmtTimestampBogota.format(new Date(iso));
+}
+
 /**
  * Formatea una fecha calendario (YYYY-MM-DD) a dd/mm/aaaa.
  * Trata el valor como fecha pura (sin hora) para evitar corrimientos de ±1 día.

@@ -6,14 +6,7 @@ import type { RecordatorioConFactura } from "@/modules/recordatorios/domain/tipo
 import { TIPO_LABEL } from "@/modules/recordatorios/presentation/labels";
 import { MarcarLeidaBoton, NotificacionesToolbar } from "@/modules/recordatorios/presentation/notificacion-acciones";
 import { RecordatorioAcciones } from "@/modules/recordatorios/presentation/recordatorio-acciones";
-import { formatFechaBogota, hoyBogota, TZ_BOGOTA } from "@/shared/fecha";
-
-const fmtCreada = new Intl.DateTimeFormat("es-CO", {
-  timeZone: TZ_BOGOTA,
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
+import { formatFechaBogota, formatTimestampBogota, hoyBogota } from "@/shared/fecha";
 
 function BadgeEstado({ r, hoy }: { r: RecordatorioConFactura; hoy: string }) {
   if (r.estado === "cumplido") return <span className="text-emerald-400">Cumplido</span>;
@@ -45,7 +38,7 @@ export default async function RecordatoriosPage() {
                 <div>
                   <p className="font-medium text-zinc-100">{n.titulo}</p>
                   <p className="text-sm text-zinc-400">{n.mensaje}</p>
-                  <p className="mt-1 text-xs text-zinc-500">{fmtCreada.format(new Date(n.created_at))}</p>
+                  <p className="mt-1 text-xs text-zinc-500">{formatTimestampBogota(n.created_at)}</p>
                 </div>
                 <MarcarLeidaBoton id={n.id} />
               </li>
