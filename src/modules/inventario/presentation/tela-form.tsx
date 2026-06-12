@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { crearTela, editarTela } from "../application/telas-actions";
+import { btnPrimario, input, labelCampo } from "@/components/ui/estilos";
 import type { Tela } from "../domain/tipos";
 
 export function TelaForm({ tela }: { tela?: Tela }) {
@@ -49,9 +50,8 @@ export function TelaForm({ tela }: { tela?: Tela }) {
     router.refresh();
   }
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500";
   const field = (name: string, label: string, opts: { type?: string; required?: boolean; def?: string | number | null } = {}) => (
-    <label className="flex flex-col gap-1 text-sm text-zinc-400">
+    <label className={labelCampo}>
       {label}{opts.required ? " *" : ""}
       <input
         name={name}
@@ -79,9 +79,9 @@ export function TelaForm({ tela }: { tela?: Tela }) {
       {field("paquetes_rollos", "Paquetes/rollos", { type: "number", def: tela?.paquetes_rollos })}
       {field("lote", "Lote", { def: tela?.lote })}
       {field("ubicacion", "Ubicación", { def: tela?.ubicacion })}
-      {error && <p className="text-sm text-red-400 sm:col-span-2">{error}</p>}
+      {error && <p className="text-sm text-peligro sm:col-span-2">{error}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
+        <button type="submit" disabled={pending} className={btnPrimario}>
           {pending ? "Guardando…" : tela ? "Guardar cambios" : "Crear tela"}
         </button>
       </div>

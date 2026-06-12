@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { listarTelas } from "@/modules/inventario/application/telas-actions";
 import { TelasTabla } from "@/modules/inventario/presentation/telas-tabla";
+import { PageHeader } from "@/components/ui/page-header";
+import { btnPrimario, btnSecundario } from "@/components/ui/estilos";
 
 export default async function InventarioPage({
   searchParams,
@@ -25,15 +27,20 @@ export default async function InventarioPage({
     return s ? `/inventario?${s}` : "/inventario";
   };
 
+  const pillActiva = "rounded-lg bg-superficie-alta px-3 py-1.5 text-sm text-texto";
+  const pillInactiva = "rounded-lg border border-borde px-3 py-1.5 text-sm text-texto-suave hover:bg-superficie-alta";
+
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-zinc-100">Inventario de tela</h2>
-        <div className="flex gap-2">
-          <Link href="/inventario/nueva" className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800">Nueva tela</Link>
-          <Link href="/inventario/importar" className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-500">Importar Excel</Link>
-        </div>
-      </div>
+      <PageHeader
+        titulo="Inventario de tela"
+        accion={
+          <div className="flex gap-2">
+            <Link href="/inventario/nueva" className={btnSecundario}>Nueva tela</Link>
+            <Link href="/inventario/importar" className={btnPrimario}>Importar Excel</Link>
+          </div>
+        }
+      />
 
       <div className="flex flex-wrap items-center gap-2">
         <form className="flex gap-2">
@@ -43,12 +50,12 @@ export default async function InventarioPage({
             name="q"
             defaultValue={q ?? ""}
             placeholder="Buscar referencia o descripción"
-            className="rounded-md border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-zinc-100 outline-none focus:border-zinc-500"
+            className="rounded-lg border border-borde bg-superficie-alta px-3 py-1.5 text-sm text-texto outline-none placeholder:text-texto-tenue focus:border-primario"
           />
-          <button type="submit" className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800">Buscar</button>
+          <button type="submit" className={pillInactiva}>Buscar</button>
         </form>
-        <Link href={toggleHref({ bajo: soloBajo ? undefined : "1" })} className={`rounded-md px-3 py-1.5 text-sm ${soloBajo ? "bg-zinc-700 text-white" : "border border-zinc-700 text-zinc-300 hover:bg-zinc-800"}`}>Solo bajo stock</Link>
-        <Link href={toggleHref({ retiradas: verRetiradas ? undefined : "1" })} className={`rounded-md px-3 py-1.5 text-sm ${verRetiradas ? "bg-zinc-700 text-white" : "border border-zinc-700 text-zinc-300 hover:bg-zinc-800"}`}>Ver retiradas</Link>
+        <Link href={toggleHref({ bajo: soloBajo ? undefined : "1" })} className={soloBajo ? pillActiva : pillInactiva}>Solo bajo stock</Link>
+        <Link href={toggleHref({ retiradas: verRetiradas ? undefined : "1" })} className={verRetiradas ? pillActiva : pillInactiva}>Ver retiradas</Link>
       </div>
 
       <TelasTabla telas={telas} />
