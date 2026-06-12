@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { cardInteractiva } from "@/components/ui/estilos";
+import { PageHeader } from "@/components/ui/page-header";
 
 const SECCIONES = [
   { href: "/contabilidad/facturas", label: "Facturas" },
@@ -11,11 +13,11 @@ const SECCIONES = [
 export default function ContabilidadPage() {
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="text-lg font-semibold text-zinc-100">Contabilidad</h2>
+      <PageHeader titulo="Contabilidad" />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {SECCIONES.map((s) => (
-          <Link key={s.href} href={s.href} className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-5 hover:bg-zinc-900">
-            <p className="font-medium text-zinc-100">{s.label}</p>
+          <Link key={s.href} href={s.href} className={cardInteractiva}>
+            <p className="font-medium text-texto">{s.label}</p>
           </Link>
         ))}
       </div>

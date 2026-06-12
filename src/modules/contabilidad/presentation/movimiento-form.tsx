@@ -4,8 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { crearIngreso, crearEgreso } from "../application/movimientos-actions";
 import { hoyBogota } from "@/shared/fecha";
+import { btnPrimario, input, labelCampo } from "@/components/ui/estilos";
 
 type Opcion = { id: string; label: string };
+
+const inputArchivo =
+  "text-sm text-texto-suave file:mr-3 file:rounded-lg file:border-0 file:bg-superficie-alta file:px-3 file:py-1.5 file:text-texto";
 
 export function MovimientoForm({
   tipo, cuentas, facturas,
@@ -30,39 +34,38 @@ export function MovimientoForm({
     router.refresh();
   }
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500";
   return (
     <form onSubmit={onSubmit} className="grid max-w-2xl gap-4 sm:grid-cols-2">
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">{esEgreso ? "Fecha de pago *" : "Fecha *"}
+      <label className={labelCampo}>{esEgreso ? "Fecha de pago *" : "Fecha *"}
         <input name={esEgreso ? "fecha_pago" : "fecha"} type="date" required defaultValue={hoyBogota()} className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Valor (COP) *
+      <label className={labelCampo}>Valor (COP) *
         <input name="valor" type="number" min="0" step="any" required className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400 sm:col-span-2">Concepto *
+      <label className={`${labelCampo} sm:col-span-2`}>Concepto *
         <input name="concepto" required className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">{esEgreso ? "Banco/Cuenta *" : "Banco/Cuenta"}
+      <label className={labelCampo}>{esEgreso ? "Banco/Cuenta *" : "Banco/Cuenta"}
         <select name="cuenta_bancaria_id" required={esEgreso} defaultValue="" className={input}>
           <option value="">{esEgreso ? "Selecciona…" : "(ninguna)"}</option>
           {cuentas.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
         </select>
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Factura (opcional)
+      <label className={labelCampo}>Factura (opcional)
         <select name="factura_id" defaultValue="" className={input}>
           <option value="">(ninguna)</option>
           {facturas.map((f) => <option key={f.id} value={f.id}>{f.label}</option>)}
         </select>
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">N.º comprobante
+      <label className={labelCampo}>N.º comprobante
         <input name="numero_comprobante" className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Comprobante (PDF/imagen)
-        <input name="archivo" type="file" accept=".pdf,image/*" className="text-sm text-zinc-300 file:mr-3 file:rounded-md file:border-0 file:bg-zinc-700 file:px-3 file:py-1.5 file:text-zinc-100" />
+      <label className={labelCampo}>Comprobante (PDF/imagen)
+        <input name="archivo" type="file" accept=".pdf,image/*" className={inputArchivo} />
       </label>
-      {error && <p className="text-sm text-red-400 sm:col-span-2">{error}</p>}
+      {error && <p className="text-sm text-peligro sm:col-span-2">{error}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
+        <button type="submit" disabled={pending} className={btnPrimario}>
           {pending ? "Guardando…" : esEgreso ? "Registrar egreso" : "Registrar ingreso"}
         </button>
       </div>
