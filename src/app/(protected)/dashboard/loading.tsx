@@ -1,3 +1,3 @@
 export default function DashboardLoading() {
-  return <p className="text-sm text-zinc-500">Cargando dashboard…</p>;
+  return <p className="text-sm text-texto-tenue">Cargando dashboard…</p>;
 }
