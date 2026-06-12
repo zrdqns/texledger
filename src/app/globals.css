@@ -1,10 +1,27 @@
 @import "tailwindcss";
 
+@theme {
+  --color-fondo: #10131a;
+  --color-superficie-baja: #191c22;
+  --color-superficie: #1d2026;
+  --color-superficie-alta: #272a31;
+  --color-borde: #414754;
+  --color-texto: #e1e2eb;
+  --color-texto-suave: #c1c6d7;
+  --color-texto-tenue: #8b90a0;
+  --color-primario: #4a8eff;
+  --color-primario-claro: #adc7ff;
+  --color-acento: #ef6719;
+  --color-peligro: #ffb4ab;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+}
+
 :root {
   color-scheme: dark;
 }
 body {
-  background-color: #09090b; /* zinc-950 */
+  background-color: var(--color-fondo);
 }
 
 /* Impresión (desprendible de nómina): fondo blanco y texto negro legible. */
