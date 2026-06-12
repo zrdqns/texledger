@@ -7,8 +7,14 @@ import {
   registrarSalida,
   registrarAjuste,
 } from "../application/movimientos-actions";
+import { btnPrimario, card, input } from "@/components/ui/estilos";
 
 type Tipo = "entrada" | "salida" | "ajuste";
+
+const pillActiva = "rounded-lg bg-primario px-3 py-1.5 text-sm capitalize text-white";
+const pillInactiva = "rounded-lg border border-borde px-3 py-1.5 text-sm capitalize text-texto-suave hover:bg-superficie-alta";
+const subPillActiva = "rounded-lg bg-superficie-alta px-3 py-1.5 text-sm text-texto";
+const subPillInactiva = "rounded-lg border border-borde px-3 py-1.5 text-sm text-texto-suave hover:bg-superficie-alta";
 
 export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; consumoDefault: number | null }) {
   const router = useRouter();
@@ -53,19 +59,15 @@ export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; co
     router.refresh();
   }
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500";
-
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-3 rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+    <form onSubmit={onSubmit} className={`${card} flex flex-col gap-3`}>
       <div className="flex gap-2">
         {(["entrada", "salida", "ajuste"] as Tipo[]).map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setTipo(t)}
-            className={`rounded-md px-3 py-1.5 text-sm capitalize ${
-              tipo === t ? "bg-emerald-600 text-white" : "border border-zinc-700 text-zinc-300"
-            }`}
+            className={tipo === t ? pillActiva : pillInactiva}
           >
             {t}
           </button>
@@ -79,8 +81,8 @@ export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; co
       {tipo === "salida" && (
         <>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setModo("metros")} className={`rounded-md px-3 py-1.5 text-sm ${modo === "metros" ? "bg-zinc-700 text-white" : "border border-zinc-700 text-zinc-300"}`}>Por metros</button>
-            <button type="button" onClick={() => setModo("prenda")} className={`rounded-md px-3 py-1.5 text-sm ${modo === "prenda" ? "bg-zinc-700 text-white" : "border border-zinc-700 text-zinc-300"}`}>Por prenda</button>
+            <button type="button" onClick={() => setModo("metros")} className={modo === "metros" ? subPillActiva : subPillInactiva}>Por metros</button>
+            <button type="button" onClick={() => setModo("prenda")} className={modo === "prenda" ? subPillActiva : subPillInactiva}>Por prenda</button>
           </div>
           {modo === "metros" ? (
             <input name="metros" type="number" step="any" min="0" placeholder="Metros" required className={input} />
@@ -98,8 +100,8 @@ export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; co
       )}
 
       <input name="nota" type="text" placeholder="Nota (opcional)" className={input} />
-      {error && <p className="text-sm text-red-400">{error}</p>}
-      <button type="submit" disabled={pending} className="rounded-md bg-emerald-600 px-3 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
+      {error && <p className="text-sm text-peligro">{error}</p>}
+      <button type="submit" disabled={pending} className={btnPrimario}>
         {pending ? "Guardando…" : "Registrar movimiento"}
       </button>
     </form>

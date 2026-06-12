@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { retirarTela } from "../application/telas-actions";
+import { btnPeligroTexto } from "@/components/ui/estilos";
 
 export function RetirarTelaBoton({ telaId }: { telaId: string }) {
   const router = useRouter();
@@ -22,7 +23,7 @@ export function RetirarTelaBoton({ telaId }: { telaId: string }) {
   }
 
   return (
-    <button onClick={onClick} disabled={pending} className="text-sm text-red-400 hover:text-red-300 disabled:opacity-50">
+    <button onClick={onClick} disabled={pending} className={btnPeligroTexto}>
       {pending ? "Retirando…" : "Retirar"}
     </button>
   );
