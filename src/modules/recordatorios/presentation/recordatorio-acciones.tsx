@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { marcarCumplido, eliminarRecordatorio } from "../application/recordatorios-actions";
+import { btnPeligroTexto } from "@/components/ui/estilos";
 import type { ActionResult } from "@/shared/action-result";
 
 export function RecordatorioAcciones({ id, cumplido }: { id: string; cumplido: boolean }) {
@@ -25,7 +26,7 @@ export function RecordatorioAcciones({ id, cumplido }: { id: string; cumplido: b
           Cumplir
         </button>
       )}
-      <button onClick={() => accion(eliminarRecordatorio, "¿Eliminar este recordatorio? Esta acción no se puede deshacer.")} disabled={pending} className="text-sm text-red-400 hover:text-red-300 disabled:opacity-50">
+      <button onClick={() => accion(eliminarRecordatorio, "¿Eliminar este recordatorio? Esta acción no se puede deshacer.")} disabled={pending} className={btnPeligroTexto}>
         Eliminar
       </button>
     </div>

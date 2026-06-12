@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { crearRecordatorio } from "../application/recordatorios-actions";
 import { TIPO_LABEL } from "./labels";
+import { btnPrimario, input, labelCampo } from "@/components/ui/estilos";
 import type { RecordatorioTipo } from "../domain/tipos";
 
 type FacturaOpcion = { id: string; numero: string; tercero: string };
@@ -31,25 +32,22 @@ export function RecordatorioForm({ facturas }: { facturas: FacturaOpcion[] }) {
     router.refresh();
   }
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500";
-  const label = "flex flex-col gap-1 text-sm text-zinc-400";
-
   return (
     <form onSubmit={onSubmit} className="grid max-w-2xl gap-4 sm:grid-cols-2">
-      <label className={label}>Tipo *
+      <label className={labelCampo}>Tipo *
         <select name="tipo" required defaultValue="pago_pendiente" className={input}>
           {(Object.keys(TIPO_LABEL) as RecordatorioTipo[]).map((t) => (
             <option key={t} value={t}>{TIPO_LABEL[t]}</option>
           ))}
         </select>
       </label>
-      <label className={label}>Fecha objetivo *
+      <label className={labelCampo}>Fecha objetivo *
         <input name="fecha_objetivo" type="date" required className={input} />
       </label>
-      <label className={`${label} sm:col-span-2`}>Descripción *
+      <label className={`${labelCampo} sm:col-span-2`}>Descripción *
         <input name="descripcion" required className={input} />
       </label>
-      <label className={`${label} sm:col-span-2`}>Factura (opcional)
+      <label className={`${labelCampo} sm:col-span-2`}>Factura (opcional)
         <select name="factura_id" defaultValue="" className={input}>
           <option value="">Ninguna</option>
           {facturas.map((f) => (
@@ -57,9 +55,9 @@ export function RecordatorioForm({ facturas }: { facturas: FacturaOpcion[] }) {
           ))}
         </select>
       </label>
-      {error && <p className="text-sm text-red-400 sm:col-span-2">{error}</p>}
+      {error && <p className="text-sm text-peligro sm:col-span-2">{error}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
+        <button type="submit" disabled={pending} className={btnPrimario}>
           {pending ? "Guardando…" : "Crear recordatorio"}
         </button>
       </div>
