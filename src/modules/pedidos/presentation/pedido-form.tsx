@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { crearPedido, editarPedido } from "../application/pedidos-actions";
 import { calcularConciliacion } from "../domain/conciliacion";
 import { hoyBogota } from "@/shared/fecha";
+import { btnPrimario, input, labelCampo } from "@/components/ui/estilos";
 
 type TelaOpcion = { id: string; referencia: string; descripcion: string; consumo_prenda_m: number | null };
 type PedidoInicial = {
@@ -66,17 +67,15 @@ export function PedidoForm({ telas, pedido }: { telas: TelaOpcion[]; pedido?: Pe
     router.refresh();
   }
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500";
-
   return (
     <form onSubmit={onSubmit} className="grid max-w-2xl gap-4 sm:grid-cols-2">
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Empresa/Cliente *
+      <label className={labelCampo}>Empresa/Cliente *
         <input name="empresa_cliente" required defaultValue={pedido?.empresa_cliente} className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Fecha *
+      <label className={labelCampo}>Fecha *
         <input name="fecha" type="date" required defaultValue={pedido?.fecha ?? hoyBogota()} className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400 sm:col-span-2">Tela *
+      <label className={`${labelCampo} sm:col-span-2`}>Tela *
         <select required value={telaId} onChange={(e) => onTela(e.target.value)} className={input}>
           <option value="">Selecciona…</option>
           {telas.map((t) => (
@@ -84,31 +83,31 @@ export function PedidoForm({ telas, pedido }: { telas: TelaOpcion[]; pedido?: Pe
           ))}
         </select>
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Prendas pedidas *
+      <label className={labelCampo}>Prendas pedidas *
         <input type="number" min="1" step="1" value={prendas} onChange={(e) => setPrendas(e.target.value)} required className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Metros llegados a planta *
+      <label className={labelCampo}>Metros llegados a planta *
         <input type="number" min="0" step="any" value={metros} onChange={(e) => setMetros(e.target.value)} required className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Consumo m/prenda *
+      <label className={labelCampo}>Consumo m/prenda *
         <input type="number" min="0" step="any" value={consumo} onChange={(e) => setConsumo(e.target.value)} required className={input} />
       </label>
-      <label className="flex flex-col gap-1 text-sm text-zinc-400">Nota
+      <label className={labelCampo}>Nota
         <input name="nota" defaultValue={pedido?.nota ?? undefined} className={input} />
       </label>
 
       {previo && (
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/40 p-3 text-sm sm:col-span-2">
-          Consumo: <span className="text-zinc-200">{previo.metrosConsumidos} m</span> · Saldo:{" "}
-          <span className={previo.estado === "deficit" ? "text-red-400" : previo.estado === "queda" ? "text-emerald-400" : "text-zinc-300"}>
+        <div className="rounded-lg border border-borde/60 bg-superficie-baja p-3 text-sm sm:col-span-2">
+          Consumo: <span className="text-texto">{previo.metrosConsumidos} m</span> · Saldo:{" "}
+          <span className={previo.estado === "deficit" ? "text-peligro" : previo.estado === "queda" ? "text-emerald-400" : "text-texto-suave"}>
             {previo.saldo} m ({previo.estado})
           </span>
         </div>
       )}
 
-      {error && <p className="text-sm text-red-400 sm:col-span-2">{error}</p>}
+      {error && <p className="text-sm text-peligro sm:col-span-2">{error}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
+        <button type="submit" disabled={pending} className={btnPrimario}>
           {pending ? "Guardando…" : pedido ? "Guardar cambios" : "Crear borrador"}
         </button>
       </div>

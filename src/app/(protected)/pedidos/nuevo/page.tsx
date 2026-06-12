@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { listarTelas } from "@/modules/inventario/application/telas-actions";
 import { PedidoForm } from "@/modules/pedidos/presentation/pedido-form";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default async function NuevoPedidoPage() {
   const telas = await listarTelas(); // solo activas por defecto
@@ -12,10 +12,7 @@ export default async function NuevoPedidoPage() {
   }));
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <Link href="/pedidos" className="text-sm text-zinc-400 hover:text-zinc-100">← Pedidos</Link>
-        <h2 className="mt-2 text-lg font-semibold text-zinc-100">Nuevo pedido</h2>
-      </div>
+      <PageHeader titulo="Nuevo pedido" volverHref="/pedidos" volverLabel="Pedidos" />
       <PedidoForm telas={opciones} />
     </div>
   );

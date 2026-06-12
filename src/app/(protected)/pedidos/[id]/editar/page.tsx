@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { obtenerPedido } from "@/modules/pedidos/application/pedidos-actions";
 import { listarTelas } from "@/modules/inventario/application/telas-actions";
 import { PedidoForm } from "@/modules/pedidos/presentation/pedido-form";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default async function EditarPedidoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -20,10 +20,7 @@ export default async function EditarPedidoPage({ params }: { params: Promise<{ i
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <Link href={`/pedidos/${id}`} className="text-sm text-zinc-400 hover:text-zinc-100">← Volver</Link>
-        <h2 className="mt-2 text-lg font-semibold text-zinc-100">Editar pedido</h2>
-      </div>
+      <PageHeader titulo="Editar pedido" volverHref={`/pedidos/${id}`} volverLabel="Volver" />
       <PedidoForm
         telas={opciones}
         pedido={{
