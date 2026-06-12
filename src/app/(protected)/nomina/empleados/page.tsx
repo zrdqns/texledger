@@ -4,7 +4,8 @@ import { formatCOP } from "@/shared/cop";
 import { formatFechaBogota } from "@/shared/fecha";
 import { RetirarEmpleadoBoton } from "@/modules/nomina/presentation/retirar-empleado-boton";
 import { PageHeader } from "@/components/ui/page-header";
-import { btnPrimario, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { CardTabla } from "@/components/ui/card-tabla";
+import { btnPrimario, filaTabla, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 import type { Empleado } from "@/modules/nomina/domain/tipos";
 
 function seguroLabel(e: Empleado): string {
@@ -23,8 +24,9 @@ export default async function EmpleadosPage() {
         volverLabel="Nómina"
         accion={<Link href="/nomina/empleados/nuevo" className={btnPrimario}>Nuevo empleado</Link>}
       />
+      <CardTabla titulo="Equipo activo">
       {empleados.length === 0 ? (
-        <p className="text-sm text-texto-tenue">No hay empleados activos.</p>
+        <p className="py-3 text-sm text-texto-tenue">No hay empleados activos.</p>
       ) : (
         <table className={tabla}>
           <thead className={theadFila}>
@@ -40,7 +42,7 @@ export default async function EmpleadosPage() {
           </thead>
           <tbody>
             {empleados.map((e) => (
-              <tr key={e.id} className="border-b border-borde/30">
+              <tr key={e.id} className={filaTabla}>
                 <td className="py-2 text-texto">{e.nombre}</td>
                 <td className="py-2 text-texto-tenue">{e.documento ?? "—"}</td>
                 <td className="py-2 text-texto-suave">{e.cargo ?? "—"}</td>
@@ -58,6 +60,7 @@ export default async function EmpleadosPage() {
           </tbody>
         </table>
       )}
+      </CardTabla>
     </div>
   );
 }
