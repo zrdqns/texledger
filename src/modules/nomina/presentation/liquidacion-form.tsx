@@ -8,6 +8,7 @@ import type { Empleado, ParametroNomina } from "../domain/tipos";
 import { MESES } from "./meses";
 import { formatCOP } from "@/shared/cop";
 import { hoyBogota } from "@/shared/fecha";
+import { btnPrimario, card, input, labelCampo, subtituloSeccion } from "@/components/ui/estilos";
 
 export function LiquidacionForm({ empleados, parametros }: { empleados: Empleado[]; parametros: ParametroNomina[] }) {
   const router = useRouter();
@@ -62,13 +63,10 @@ export function LiquidacionForm({ empleados, parametros }: { empleados: Empleado
     router.refresh();
   }
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500";
-  const label = "flex flex-col gap-1 text-sm text-zinc-400";
-
   return (
     <div className="grid max-w-4xl gap-8 lg:grid-cols-2">
       <form onSubmit={onSubmit} className="grid content-start gap-4 sm:grid-cols-2">
-        <label className={`${label} sm:col-span-2`}>
+        <label className={`${labelCampo} sm:col-span-2`}>
           Empleado *
           <select required value={empleadoId} onChange={(e) => setEmpleadoId(e.target.value)} className={input}>
             <option value="">Selecciona…</option>
@@ -77,61 +75,61 @@ export function LiquidacionForm({ empleados, parametros }: { empleados: Empleado
             ))}
           </select>
         </label>
-        <label className={label}>Año *
+        <label className={labelCampo}>Año *
           <input type="number" required value={anio} onChange={(e) => setAnio(e.target.value)} className={input} />
         </label>
-        <label className={label}>Mes *
+        <label className={labelCampo}>Mes *
           <select required value={mes} onChange={(e) => setMes(e.target.value)} className={input}>
             {MESES.map((m, i) => (
               <option key={m} value={i + 1}>{m}</option>
             ))}
           </select>
         </label>
-        <label className={label}>Días laborados *
+        <label className={labelCampo}>Días laborados *
           <input type="number" step="any" min="0.5" max="30" required value={dias} onChange={(e) => setDias(e.target.value)} className={input} />
         </label>
-        <label className={label}>Libranzas (COP)
+        <label className={labelCampo}>Libranzas (COP)
           <input type="number" step="any" min="0" value={libranzas} onChange={(e) => setLibranzas(e.target.value)} className={input} />
         </label>
-        <label className={label}>Incapacidades (días)
+        <label className={labelCampo}>Incapacidades (días)
           <input type="number" step="any" min="0" value={incapDias} onChange={(e) => setIncapDias(e.target.value)} className={input} />
         </label>
-        <label className={label}>Licencias (días)
+        <label className={labelCampo}>Licencias (días)
           <input type="number" step="any" min="0" value={licDias} onChange={(e) => setLicDias(e.target.value)} className={input} />
         </label>
-        <label className={`${label} sm:col-span-2`}>
+        <label className={`${labelCampo} sm:col-span-2`}>
           Ajuste por incapacidades/licencias (COP, puede ser negativo)
           <input type="number" step="any" value={ajuste} onChange={(e) => setAjuste(e.target.value)} className={input} />
         </label>
-        {error && <p className="text-sm text-red-400 sm:col-span-2">{error}</p>}
+        {error && <p className="text-sm text-peligro sm:col-span-2">{error}</p>}
         <div className="sm:col-span-2">
-          <button type="submit" disabled={pending || !preview} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
+          <button type="submit" disabled={pending || !preview} className={btnPrimario}>
             {pending ? "Guardando…" : "Crear liquidación"}
           </button>
         </div>
       </form>
 
-      <aside className="h-fit rounded-xl border border-zinc-800 bg-zinc-900/40 p-5">
-        <h3 className="text-sm font-semibold text-zinc-300">Previsualización</h3>
+      <aside className={`h-fit ${card}`}>
+        <h3 className={subtituloSeccion}>Previsualización</h3>
         {!empleado ? (
-          <p className="mt-3 text-sm text-zinc-500">Selecciona un empleado.</p>
+          <p className="mt-3 text-sm text-texto-tenue">Selecciona un empleado.</p>
         ) : !parametro ? (
-          <p className="mt-3 text-sm text-amber-400">No hay parámetros para el año {anio}: créalos en Parámetros.</p>
+          <p className="mt-3 text-sm text-acento">No hay parámetros para el año {anio}: créalos en Parámetros.</p>
         ) : !preview ? (
-          <p className="mt-3 text-sm text-zinc-500">Ingresa los días laborados (1 a 30).</p>
+          <p className="mt-3 text-sm text-texto-tenue">Ingresa los días laborados (1 a 30).</p>
         ) : (
           <dl className="mt-3 flex flex-col gap-1 text-sm [&>div]:flex [&>div]:items-baseline [&>div]:justify-between">
-            <div><dt className="text-zinc-400">Sueldo proporcional</dt><dd className="tabular-nums text-zinc-200">{formatCOP(preview.sueldo_prop)}</dd></div>
-            <div><dt className="text-zinc-400">Auxilio de transporte</dt><dd className="tabular-nums text-zinc-200">{formatCOP(preview.auxilio_prop)}</dd></div>
-            <div><dt className="text-zinc-400">Ajuste incap./licencias</dt><dd className="tabular-nums text-zinc-200">{formatCOP(Number(ajuste) || 0)}</dd></div>
-            <div className="border-t border-zinc-800 pt-1"><dt className="text-zinc-300">Total devengado</dt><dd className="tabular-nums font-medium text-zinc-100">{formatCOP(preview.total_devengado)}</dd></div>
-            <div><dt className="text-zinc-400">IBC</dt><dd className="tabular-nums text-zinc-400">{formatCOP(preview.ibc)}</dd></div>
-            <div><dt className="text-zinc-400">Pensión ({parametro.pct_pension}%)</dt><dd className="tabular-nums text-zinc-200">−{formatCOP(preview.ded_pension)}</dd></div>
-            <div><dt className="text-zinc-400">Salud ({parametro.pct_salud}%)</dt><dd className="tabular-nums text-zinc-200">−{formatCOP(preview.ded_salud)}</dd></div>
-            <div><dt className="text-zinc-400">Seguro</dt><dd className="tabular-nums text-zinc-200">−{formatCOP(preview.ded_seguro)}</dd></div>
-            <div><dt className="text-zinc-400">Libranzas</dt><dd className="tabular-nums text-zinc-200">−{formatCOP(Number(libranzas) || 0)}</dd></div>
-            <div className="border-t border-zinc-800 pt-1"><dt className="text-zinc-300">Total deducido</dt><dd className="tabular-nums font-medium text-zinc-100">−{formatCOP(preview.total_deducido)}</dd></div>
-            <div className="mt-2 rounded-md bg-zinc-800/60 px-3 py-2"><dt className="font-medium text-zinc-100">Neto a pagar</dt><dd className="text-lg font-semibold tabular-nums text-emerald-400">{formatCOP(preview.neto_pagado)}</dd></div>
+            <div><dt className="text-texto-tenue">Sueldo proporcional</dt><dd className="font-mono tabular-nums text-texto">{formatCOP(preview.sueldo_prop)}</dd></div>
+            <div><dt className="text-texto-tenue">Auxilio de transporte</dt><dd className="font-mono tabular-nums text-texto">{formatCOP(preview.auxilio_prop)}</dd></div>
+            <div><dt className="text-texto-tenue">Ajuste incap./licencias</dt><dd className="font-mono tabular-nums text-texto">{formatCOP(Number(ajuste) || 0)}</dd></div>
+            <div className="border-t border-borde/60 pt-1"><dt className="text-texto-suave">Total devengado</dt><dd className="font-mono tabular-nums font-medium text-texto">{formatCOP(preview.total_devengado)}</dd></div>
+            <div><dt className="text-texto-tenue">IBC</dt><dd className="font-mono tabular-nums text-texto-tenue">{formatCOP(preview.ibc)}</dd></div>
+            <div><dt className="text-texto-tenue">Pensión ({parametro.pct_pension}%)</dt><dd className="font-mono tabular-nums text-texto">−{formatCOP(preview.ded_pension)}</dd></div>
+            <div><dt className="text-texto-tenue">Salud ({parametro.pct_salud}%)</dt><dd className="font-mono tabular-nums text-texto">−{formatCOP(preview.ded_salud)}</dd></div>
+            <div><dt className="text-texto-tenue">Seguro</dt><dd className="font-mono tabular-nums text-texto">−{formatCOP(preview.ded_seguro)}</dd></div>
+            <div><dt className="text-texto-tenue">Libranzas</dt><dd className="font-mono tabular-nums text-texto">−{formatCOP(Number(libranzas) || 0)}</dd></div>
+            <div className="border-t border-borde/60 pt-1"><dt className="text-texto-suave">Total deducido</dt><dd className="font-mono tabular-nums font-medium text-texto">−{formatCOP(preview.total_deducido)}</dd></div>
+            <div className="mt-2 rounded-lg bg-superficie-alta px-3 py-2"><dt className="font-medium text-texto">Neto a pagar</dt><dd className="font-mono text-lg font-semibold tabular-nums text-emerald-400">{formatCOP(preview.neto_pagado)}</dd></div>
           </dl>
         )}
       </aside>

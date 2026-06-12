@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { retirarEmpleado } from "../application/empleados-actions";
+import { btnPeligroTexto } from "@/components/ui/estilos";
 
 export function RetirarEmpleadoBoton({ empleadoId }: { empleadoId: string }) {
   const router = useRouter();
@@ -21,7 +22,7 @@ export function RetirarEmpleadoBoton({ empleadoId }: { empleadoId: string }) {
   }
 
   return (
-    <button onClick={onClick} disabled={pending} className="text-sm text-red-400 hover:text-red-300 disabled:opacity-50">
+    <button onClick={onClick} disabled={pending} className={btnPeligroTexto}>
       {pending ? "Retirando…" : "Retirar"}
     </button>
   );
