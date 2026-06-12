@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { crearParametro, editarParametro } from "../application/parametros-actions";
+import { btnPrimario, input, labelCampo } from "@/components/ui/estilos";
 import type { ParametroNomina } from "../domain/tipos";
 
 export function ParametroForm({ parametro }: { parametro?: ParametroNomina }) {
@@ -31,9 +32,8 @@ export function ParametroForm({ parametro }: { parametro?: ParametroNomina }) {
     router.refresh();
   }
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 outline-none focus:border-zinc-500";
   const field = (name: string, label: string, def?: number) => (
-    <label className="flex flex-col gap-1 text-sm text-zinc-400">
+    <label className={labelCampo}>
       {label} *
       <input name={name} type="number" step="any" required defaultValue={def} className={input} />
     </label>
@@ -47,9 +47,9 @@ export function ParametroForm({ parametro }: { parametro?: ParametroNomina }) {
       {field("tope_auxilio_smmlv", "Tope auxilio (SMMLV)", parametro?.tope_auxilio_smmlv)}
       {field("pct_pension", "% Pensión", parametro?.pct_pension)}
       {field("pct_salud", "% Salud", parametro?.pct_salud)}
-      {error && <p className="text-sm text-red-400 sm:col-span-2">{error}</p>}
+      {error && <p className="text-sm text-peligro sm:col-span-2">{error}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50">
+        <button type="submit" disabled={pending} className={btnPrimario}>
           {pending ? "Guardando…" : parametro ? "Guardar cambios" : "Crear parámetros"}
         </button>
       </div>

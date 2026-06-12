@@ -3,6 +3,8 @@ import { listarEmpleados } from "@/modules/nomina/application/empleados-actions"
 import { formatCOP } from "@/shared/cop";
 import { formatFechaBogota } from "@/shared/fecha";
 import { RetirarEmpleadoBoton } from "@/modules/nomina/presentation/retirar-empleado-boton";
+import { PageHeader } from "@/components/ui/page-header";
+import { btnPrimario, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 import type { Empleado } from "@/modules/nomina/domain/tipos";
 
 function seguroLabel(e: Empleado): string {
@@ -15,40 +17,39 @@ export default async function EmpleadosPage() {
   const empleados = await listarEmpleados();
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link href="/nomina" className="text-sm text-zinc-400 hover:text-zinc-100">← Nómina</Link>
-          <h2 className="mt-2 text-lg font-semibold text-zinc-100">Empleados</h2>
-        </div>
-        <Link href="/nomina/empleados/nuevo" className="rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-500">Nuevo empleado</Link>
-      </div>
+      <PageHeader
+        titulo="Empleados"
+        volverHref="/nomina"
+        volverLabel="Nómina"
+        accion={<Link href="/nomina/empleados/nuevo" className={btnPrimario}>Nuevo empleado</Link>}
+      />
       {empleados.length === 0 ? (
-        <p className="text-sm text-zinc-500">No hay empleados activos.</p>
+        <p className="text-sm text-texto-tenue">No hay empleados activos.</p>
       ) : (
-        <table className="w-full text-sm [&_td]:pr-4 [&_th]:pr-4">
-          <thead className="text-left text-zinc-400">
-            <tr className="border-b border-zinc-800">
-              <th className="py-2 font-medium">Nombre</th>
-              <th className="py-2 font-medium">Documento</th>
-              <th className="py-2 font-medium">Cargo</th>
-              <th className="py-2 font-medium text-right">Sueldo básico</th>
-              <th className="py-2 font-medium">Seguro</th>
-              <th className="py-2 font-medium">Ingreso</th>
-              <th className="py-2 font-medium"></th>
+        <table className={tabla}>
+          <thead className={theadFila}>
+            <tr>
+              <th className={thCelda}>Nombre</th>
+              <th className={thCelda}>Documento</th>
+              <th className={thCelda}>Cargo</th>
+              <th className={`${thCelda} text-right`}>Sueldo básico</th>
+              <th className={thCelda}>Seguro</th>
+              <th className={thCelda}>Ingreso</th>
+              <th className={thCelda}></th>
             </tr>
           </thead>
           <tbody>
             {empleados.map((e) => (
-              <tr key={e.id} className="border-b border-zinc-900">
-                <td className="py-2 text-zinc-200">{e.nombre}</td>
-                <td className="py-2 text-zinc-400">{e.documento ?? "—"}</td>
-                <td className="py-2 text-zinc-300">{e.cargo ?? "—"}</td>
-                <td className="py-2 text-right tabular-nums text-zinc-200">{formatCOP(e.sueldo_basico)}</td>
-                <td className="py-2 text-zinc-300">{seguroLabel(e)}</td>
-                <td className="py-2 text-zinc-400">{e.fecha_ingreso ? formatFechaBogota(e.fecha_ingreso) : "—"}</td>
+              <tr key={e.id} className="border-b border-borde/30">
+                <td className="py-2 text-texto">{e.nombre}</td>
+                <td className="py-2 text-texto-tenue">{e.documento ?? "—"}</td>
+                <td className="py-2 text-texto-suave">{e.cargo ?? "—"}</td>
+                <td className="py-2 text-right font-mono tabular-nums text-texto">{formatCOP(e.sueldo_basico)}</td>
+                <td className="py-2 text-texto-suave">{seguroLabel(e)}</td>
+                <td className="py-2 text-texto-tenue">{e.fecha_ingreso ? formatFechaBogota(e.fecha_ingreso) : "—"}</td>
                 <td className="py-2">
                   <div className="flex gap-3">
-                    <Link href={`/nomina/empleados/${e.id}/editar`} className="text-zinc-400 hover:text-zinc-100">Editar</Link>
+                    <Link href={`/nomina/empleados/${e.id}/editar`} className={linkSuave}>Editar</Link>
                     <RetirarEmpleadoBoton empleadoId={e.id} />
                   </div>
                 </td>
