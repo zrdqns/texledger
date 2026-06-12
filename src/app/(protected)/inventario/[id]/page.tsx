@@ -5,7 +5,8 @@ import { listarKardex } from "@/modules/inventario/application/movimientos-actio
 import { MovimientoModal } from "@/modules/inventario/presentation/movimiento-modal";
 import { RetirarTelaBoton } from "@/modules/inventario/presentation/retirar-tela-boton";
 import { formatFechaBogota } from "@/shared/fecha";
-import { linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { CardTabla } from "@/components/ui/card-tabla";
+import { filaTabla, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 
 export default async function TelaDetallePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -30,10 +31,9 @@ export default async function TelaDetallePage({ params }: { params: Promise<{ id
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
-        <div>
-          <h3 className="mb-2 text-sm font-medium text-texto-suave">Kardex</h3>
+        <CardTabla titulo="Kardex">
           {kardex.length === 0 ? (
-            <p className="text-sm text-texto-tenue">Sin movimientos.</p>
+            <p className="py-3 text-sm text-texto-tenue">Sin movimientos.</p>
           ) : (
             <table className={tabla}>
               <thead className={theadFila}>
@@ -46,19 +46,19 @@ export default async function TelaDetallePage({ params }: { params: Promise<{ id
               </thead>
               <tbody>
                 {kardex.map((m) => (
-                  <tr key={m.id} className="border-b border-borde/30">
-                    <td className="py-2 text-texto-tenue">{formatFechaBogota(m.created_at.slice(0, 10))}</td>
-                    <td className="py-2 capitalize text-texto-suave">{m.tipo}</td>
-                    <td className={m.cantidad_m < 0 ? "py-2 text-right font-mono tabular-nums text-peligro" : "py-2 text-right font-mono tabular-nums text-emerald-400"}>
+                  <tr key={m.id} className={filaTabla}>
+                    <td className="py-2.5 text-texto-tenue">{formatFechaBogota(m.created_at.slice(0, 10))}</td>
+                    <td className="py-2.5 capitalize text-texto-suave">{m.tipo}</td>
+                    <td className={m.cantidad_m < 0 ? "py-2.5 text-right font-mono tabular-nums text-peligro" : "py-2.5 text-right font-mono tabular-nums text-emerald-400"}>
                       {m.cantidad_m > 0 ? "+" : ""}{m.cantidad_m}
                     </td>
-                    <td className="py-2 text-right font-mono tabular-nums text-texto">{m.saldo_resultante_m}</td>
+                    <td className="py-2.5 text-right font-mono tabular-nums text-texto">{m.saldo_resultante_m}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
-        </div>
+        </CardTabla>
         <MovimientoModal telaId={tela.id} consumoDefault={tela.consumo_prenda_m} />
       </div>
     </div>

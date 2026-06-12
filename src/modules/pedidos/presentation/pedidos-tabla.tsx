@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { formatFechaBogota } from "@/shared/fecha";
 import { SaldoBadge } from "./saldo-badge";
-import { tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { filaTabla, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 import type { PedidoConTela } from "../domain/tipos";
 
 export function PedidosTabla({ pedidos }: { pedidos: PedidoConTela[] }) {
-  if (pedidos.length === 0) return <p className="text-sm text-texto-tenue">No hay pedidos.</p>;
+  if (pedidos.length === 0) return <p className="py-3 text-sm text-texto-tenue">No hay pedidos.</p>;
   return (
     <table className={tabla}>
       <thead className={theadFila}>
@@ -19,14 +19,14 @@ export function PedidosTabla({ pedidos }: { pedidos: PedidoConTela[] }) {
       </thead>
       <tbody>
         {pedidos.map((p) => (
-          <tr key={p.id} className="border-b border-borde/30 hover:bg-superficie">
-            <td className="py-2 text-texto-tenue">{formatFechaBogota(p.fecha)}</td>
-            <td className="py-2">
-              <Link href={`/pedidos/${p.id}`} className="text-primario-claro hover:underline">{p.empresa_cliente}</Link>
+          <tr key={p.id} className={filaTabla}>
+            <td className="py-2.5 text-texto-tenue">{formatFechaBogota(p.fecha)}</td>
+            <td className="py-2.5">
+              <Link href={`/pedidos/${p.id}`} className="font-medium text-primario-claro hover:underline">{p.empresa_cliente}</Link>
             </td>
-            <td className="py-2 text-texto-suave">{p.tela_referencia}</td>
-            <td className="py-2 capitalize text-texto-suave">{p.estado}</td>
-            <td className="py-2"><SaldoBadge pedido={p} /></td>
+            <td className="py-2.5 text-texto-suave">{p.tela_referencia}</td>
+            <td className="py-2.5 capitalize text-texto-suave">{p.estado}</td>
+            <td className="py-2.5"><SaldoBadge pedido={p} /></td>
           </tr>
         ))}
       </tbody>

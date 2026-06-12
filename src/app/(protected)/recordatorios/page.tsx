@@ -7,7 +7,8 @@ import { TIPO_LABEL } from "@/modules/recordatorios/presentation/labels";
 import { MarcarLeidaBoton, NotificacionesToolbar } from "@/modules/recordatorios/presentation/notificacion-acciones";
 import { RecordatorioAcciones } from "@/modules/recordatorios/presentation/recordatorio-acciones";
 import { formatFechaBogota, formatTimestampBogota, hoyBogota } from "@/shared/fecha";
-import { btnPrimario, subtituloSeccion, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { CardTabla } from "@/components/ui/card-tabla";
+import { btnPrimario, filaTabla, subtituloSeccion, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 
 function BadgeEstado({ r, hoy }: { r: RecordatorioConFactura; hoy: string }) {
   if (r.estado === "cumplido") return <span className="text-emerald-400">Cumplido</span>;
@@ -35,7 +36,11 @@ export default async function RecordatoriosPage() {
         ) : (
           <ul className="flex flex-col gap-2">
             {noLeidas.map((n) => (
-              <li key={n.id} className="flex items-start justify-between gap-4 rounded-xl border border-borde/60 bg-superficie-baja p-4">
+              <li key={n.id} className="group relative flex items-start justify-between gap-4 overflow-hidden rounded-xl border border-white/10 bg-superficie-baja p-4 transition-colors duration-300 hover:border-acento/40">
+                <div
+                  className="absolute inset-y-0 left-0 w-0.5 bg-gradient-to-b from-acento/70 to-transparent"
+                  aria-hidden
+                />
                 <div>
                   <p className="font-medium text-texto">{n.titulo}</p>
                   <p className="text-sm text-texto-tenue">{n.mensaje}</p>
@@ -49,12 +54,12 @@ export default async function RecordatoriosPage() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <h2 className={subtituloSeccion}>Recordatorios</h2>
-          <Link href="/recordatorios/nuevo" className={btnPrimario}>Nuevo recordatorio</Link>
-        </div>
+        <CardTabla
+          titulo="Recordatorios"
+          accion={<Link href="/recordatorios/nuevo" className={btnPrimario}>Nuevo recordatorio</Link>}
+        >
         {recordatorios.length === 0 ? (
-          <p className="text-sm text-texto-tenue">No hay recordatorios.</p>
+          <p className="py-3 text-sm text-texto-tenue">No hay recordatorios.</p>
         ) : (
           <table className={tabla}>
             <thead className={theadFila}>
@@ -69,7 +74,7 @@ export default async function RecordatoriosPage() {
             </thead>
             <tbody>
               {recordatorios.map((r) => (
-                <tr key={r.id} className="border-b border-borde/30">
+                <tr key={r.id} className={filaTabla}>
                   <td className="py-2 text-texto-suave">{TIPO_LABEL[r.tipo]}</td>
                   <td className="py-2 text-texto">{r.descripcion}</td>
                   <td className="py-2 text-texto-tenue">{formatFechaBogota(r.fecha_objetivo)}</td>
@@ -81,6 +86,7 @@ export default async function RecordatoriosPage() {
             </tbody>
           </table>
         )}
+        </CardTabla>
       </section>
     </div>
   );

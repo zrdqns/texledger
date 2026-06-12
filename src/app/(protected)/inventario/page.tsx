@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listarTelas } from "@/modules/inventario/application/telas-actions";
 import { TelasTabla } from "@/modules/inventario/presentation/telas-tabla";
 import { PageHeader } from "@/components/ui/page-header";
+import { CardTabla } from "@/components/ui/card-tabla";
 import { btnPrimario, btnSecundario, pillActiva, pillInactiva } from "@/components/ui/estilos";
 
 export default async function InventarioPage({
@@ -55,7 +56,9 @@ export default async function InventarioPage({
         <Link href={toggleHref({ retiradas: verRetiradas ? undefined : "1" })} className={verRetiradas ? pillActiva : pillInactiva}>Ver retiradas</Link>
       </div>
 
-      <TelasTabla telas={telas} />
+      <CardTabla titulo="Detalle de inventario">
+        <TelasTabla telas={telas} />
+      </CardTabla>
     </div>
   );
 }

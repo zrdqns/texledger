@@ -3,7 +3,8 @@ import { listarLiquidaciones } from "@/modules/nomina/application/liquidaciones-
 import { formatCOP } from "@/shared/cop";
 import { formatPeriodo } from "@/modules/nomina/presentation/meses";
 import { PageHeader } from "@/components/ui/page-header";
-import { btnPrimario, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { CardTabla } from "@/components/ui/card-tabla";
+import { btnPrimario, filaTabla, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 
 export default async function LiquidacionesPage() {
   const liquidaciones = await listarLiquidaciones();
@@ -15,8 +16,9 @@ export default async function LiquidacionesPage() {
         volverLabel="Nómina"
         accion={<Link href="/nomina/liquidaciones/nueva" className={btnPrimario}>Nueva liquidación</Link>}
       />
+      <CardTabla titulo="Historial de liquidaciones">
       {liquidaciones.length === 0 ? (
-        <p className="text-sm text-texto-tenue">No hay liquidaciones.</p>
+        <p className="py-3 text-sm text-texto-tenue">No hay liquidaciones.</p>
       ) : (
         <table className={tabla}>
           <thead className={theadFila}>
@@ -32,7 +34,7 @@ export default async function LiquidacionesPage() {
           </thead>
           <tbody>
             {liquidaciones.map((l) => (
-              <tr key={l.id} className="border-b border-borde/30">
+              <tr key={l.id} className={filaTabla}>
                 <td className="py-2 text-texto-suave">{formatPeriodo(l.periodo_anio, l.periodo_mes)}</td>
                 <td className="py-2 text-texto">{l.empleados?.nombre ?? "—"}</td>
                 <td className="py-2 text-right font-mono tabular-nums text-texto-suave">{l.dias_laborados}</td>
@@ -45,6 +47,7 @@ export default async function LiquidacionesPage() {
           </tbody>
         </table>
       )}
+      </CardTabla>
     </div>
   );
 }

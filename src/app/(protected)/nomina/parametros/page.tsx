@@ -2,7 +2,8 @@ import Link from "next/link";
 import { listarParametros } from "@/modules/nomina/application/parametros-actions";
 import { formatCOP } from "@/shared/cop";
 import { PageHeader } from "@/components/ui/page-header";
-import { btnPrimario, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { CardTabla } from "@/components/ui/card-tabla";
+import { btnPrimario, filaTabla, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 
 export default async function ParametrosPage() {
   const parametros = await listarParametros();
@@ -14,8 +15,9 @@ export default async function ParametrosPage() {
         volverLabel="Nómina"
         accion={<Link href="/nomina/parametros/nuevo" className={btnPrimario}>Nuevo año</Link>}
       />
+      <CardTabla titulo="Parámetros legales por año">
       {parametros.length === 0 ? (
-        <p className="text-sm text-texto-tenue">No hay parámetros configurados.</p>
+        <p className="py-3 text-sm text-texto-tenue">No hay parámetros configurados.</p>
       ) : (
         <table className={tabla}>
           <thead className={theadFila}>
@@ -31,7 +33,7 @@ export default async function ParametrosPage() {
           </thead>
           <tbody>
             {parametros.map((p) => (
-              <tr key={p.id} className="border-b border-borde/30">
+              <tr key={p.id} className={filaTabla}>
                 <td className="py-2 text-texto">{p.anio}</td>
                 <td className="py-2 text-right font-mono tabular-nums text-texto">{formatCOP(p.smmlv)}</td>
                 <td className="py-2 text-right font-mono tabular-nums text-texto">{formatCOP(p.auxilio_transporte)}</td>
@@ -44,6 +46,7 @@ export default async function ParametrosPage() {
           </tbody>
         </table>
       )}
+      </CardTabla>
     </div>
   );
 }

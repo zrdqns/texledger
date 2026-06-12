@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listarPedidos } from "@/modules/pedidos/application/pedidos-actions";
 import { PedidosTabla } from "@/modules/pedidos/presentation/pedidos-tabla";
 import { PageHeader } from "@/components/ui/page-header";
+import { CardTabla } from "@/components/ui/card-tabla";
 import { btnPrimario, pillActiva, pillInactiva } from "@/components/ui/estilos";
 
 const ESTADOS = ["borrador", "confirmado", "cerrado", "anulado"];
@@ -26,7 +27,9 @@ export default async function PedidosPage({
           <Link key={e} href={`/pedidos?estado=${e}`} className={estado === e ? `${pillActiva} capitalize` : `${pillInactiva} capitalize`}>{e}</Link>
         ))}
       </div>
-      <PedidosTabla pedidos={pedidos} />
+      <CardTabla titulo="Historial de pedidos">
+        <PedidosTabla pedidos={pedidos} />
+      </CardTabla>
     </div>
   );
 }
