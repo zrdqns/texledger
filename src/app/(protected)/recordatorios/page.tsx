@@ -7,7 +7,7 @@ import { TIPO_LABEL } from "@/modules/recordatorios/presentation/labels";
 import { MarcarLeidaBoton, NotificacionesToolbar } from "@/modules/recordatorios/presentation/notificacion-acciones";
 import { RecordatorioAcciones } from "@/modules/recordatorios/presentation/recordatorio-acciones";
 import { formatFechaBogota, formatTimestampBogota, hoyBogota } from "@/shared/fecha";
-import { btnPrimario, card, subtituloSeccion, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { btnPrimario, subtituloSeccion, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 
 function BadgeEstado({ r, hoy }: { r: RecordatorioConFactura; hoy: string }) {
   if (r.estado === "cumplido") return <span className="text-emerald-400">Cumplido</span>;
@@ -35,7 +35,7 @@ export default async function RecordatoriosPage() {
         ) : (
           <ul className="flex flex-col gap-2">
             {noLeidas.map((n) => (
-              <li key={n.id} className={`${card} flex items-start justify-between gap-4 p-4`}>
+              <li key={n.id} className="flex items-start justify-between gap-4 rounded-xl border border-borde/60 bg-superficie-baja p-4">
                 <div>
                   <p className="font-medium text-texto">{n.titulo}</p>
                   <p className="text-sm text-texto-tenue">{n.mensaje}</p>
