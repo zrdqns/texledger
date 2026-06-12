@@ -7,14 +7,11 @@ import {
   registrarSalida,
   registrarAjuste,
 } from "../application/movimientos-actions";
-import { btnPrimario, card, input } from "@/components/ui/estilos";
+import { btnPrimario, card, input, pillActiva, pillInactiva } from "@/components/ui/estilos";
 
 type Tipo = "entrada" | "salida" | "ajuste";
 
-const pillActiva = "rounded-lg bg-primario px-3 py-1.5 text-sm capitalize text-white";
-const pillInactiva = "rounded-lg border border-borde px-3 py-1.5 text-sm capitalize text-texto-suave hover:bg-superficie-alta";
-const subPillActiva = "rounded-lg bg-superficie-alta px-3 py-1.5 text-sm text-texto";
-const subPillInactiva = "rounded-lg border border-borde px-3 py-1.5 text-sm text-texto-suave hover:bg-superficie-alta";
+const tipoPillActiva = "rounded-lg bg-primario px-3 py-1.5 text-sm capitalize text-white";
 
 export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; consumoDefault: number | null }) {
   const router = useRouter();
@@ -67,7 +64,7 @@ export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; co
             key={t}
             type="button"
             onClick={() => setTipo(t)}
-            className={tipo === t ? pillActiva : pillInactiva}
+            className={tipo === t ? tipoPillActiva : `${pillInactiva} capitalize`}
           >
             {t}
           </button>
@@ -81,8 +78,8 @@ export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; co
       {tipo === "salida" && (
         <>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setModo("metros")} className={modo === "metros" ? subPillActiva : subPillInactiva}>Por metros</button>
-            <button type="button" onClick={() => setModo("prenda")} className={modo === "prenda" ? subPillActiva : subPillInactiva}>Por prenda</button>
+            <button type="button" onClick={() => setModo("metros")} className={modo === "metros" ? pillActiva : pillInactiva}>Por metros</button>
+            <button type="button" onClick={() => setModo("prenda")} className={modo === "prenda" ? pillActiva : pillInactiva}>Por prenda</button>
           </div>
           {modo === "metros" ? (
             <input name="metros" type="number" step="any" min="0" placeholder="Metros" required className={input} />

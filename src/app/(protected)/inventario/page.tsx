@@ -2,7 +2,7 @@ import Link from "next/link";
 import { listarTelas } from "@/modules/inventario/application/telas-actions";
 import { TelasTabla } from "@/modules/inventario/presentation/telas-tabla";
 import { PageHeader } from "@/components/ui/page-header";
-import { btnPrimario, btnSecundario } from "@/components/ui/estilos";
+import { btnPrimario, btnSecundario, pillActiva, pillInactiva } from "@/components/ui/estilos";
 
 export default async function InventarioPage({
   searchParams,
@@ -26,9 +26,6 @@ export default async function InventarioPage({
     const s = p.toString();
     return s ? `/inventario?${s}` : "/inventario";
   };
-
-  const pillActiva = "rounded-lg bg-superficie-alta px-3 py-1.5 text-sm text-texto";
-  const pillInactiva = "rounded-lg border border-borde px-3 py-1.5 text-sm text-texto-suave hover:bg-superficie-alta";
 
   return (
     <div className="flex flex-col gap-6">

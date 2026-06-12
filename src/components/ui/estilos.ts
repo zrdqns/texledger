@@ -29,3 +29,6 @@ export const thCelda = "py-2 font-medium";
 export const tdBase = "py-2";
 export const linkSuave = "text-sm text-texto-tenue hover:text-texto";
 export const subtituloSeccion = "text-lg font-semibold text-texto";
+export const pillActiva = "rounded-lg bg-superficie-alta px-3 py-1.5 text-sm text-texto";
+export const pillInactiva =
+  "rounded-lg border border-borde px-3 py-1.5 text-sm text-texto-suave hover:bg-superficie-alta";
