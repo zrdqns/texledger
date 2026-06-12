@@ -2,10 +2,15 @@ import { LoginForm } from "@/modules/auth/presentation/login-form";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-zinc-950 px-4">
-      <div className="flex flex-col items-center gap-8">
-        <h1 className="text-xl font-semibold text-zinc-100">Sistema Contable Textil</h1>
-        <LoginForm />
+    <main className="flex min-h-screen items-center justify-center bg-fondo px-4">
+      <div className="flex w-full max-w-sm flex-col items-center gap-8">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-texto">TexLedger</h1>
+          <p className="mt-1 text-sm text-texto-tenue">Contabilidad textil</p>
+        </div>
+        <div className="w-full rounded-xl border border-borde/60 bg-superficie-baja p-6">
+          <LoginForm />
+        </div>
       </div>
     </main>
   );
