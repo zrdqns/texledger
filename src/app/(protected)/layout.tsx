@@ -12,12 +12,12 @@ export default async function ProtectedLayout({
     <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex flex-1 flex-col">
-        <header className="flex h-14 items-center justify-between border-b border-zinc-800 px-6 print:hidden">
-          <h1 className="text-sm font-medium text-zinc-200">Panel</h1>
+        <header className="flex h-14 items-center justify-between border-b border-borde/40 px-6 print:hidden">
+          <h1 className="text-sm font-medium text-texto-suave">Panel</h1>
           <div className="flex items-center gap-5">
             <Campana />
             <form action="/auth/signout" method="post">
-              <button className="text-sm text-zinc-400 hover:text-zinc-100">
+              <button className="text-sm text-texto-tenue hover:text-texto">
                 Salir
               </button>
             </form>
