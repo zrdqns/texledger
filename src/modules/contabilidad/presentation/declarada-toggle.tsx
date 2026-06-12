@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { alternarDeclarada } from "../application/facturas-actions";
+import { badgeAcento, badgeOk } from "@/components/ui/estilos";
 
 export function DeclaradaToggle({ id, declarada }: { id: string; declarada: boolean }) {
   const router = useRouter();
@@ -14,7 +15,7 @@ export function DeclaradaToggle({ id, declarada }: { id: string; declarada: bool
     router.refresh();
   }
   return (
-    <button onClick={toggle} disabled={pending} className={`rounded-full px-2 py-0.5 text-xs ${declarada ? "bg-emerald-500/15 text-emerald-400" : "bg-amber-500/15 text-amber-400"}`}>
+    <button onClick={toggle} disabled={pending} className={declarada ? badgeOk : badgeAcento}>
       {declarada ? "Declarada" : "Sin declarar"}
     </button>
   );

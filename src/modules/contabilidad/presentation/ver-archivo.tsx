@@ -5,7 +5,7 @@ import { obtenerUrlArchivo } from "../application/archivos-actions";
 
 export function VerArchivo({ path }: { path: string | null }) {
   const [pending, setPending] = useState(false);
-  if (!path) return <span className="text-zinc-600">—</span>;
+  if (!path) return <span className="text-texto-tenue">—</span>;
   async function abrir() {
     setPending(true);
     const res = await obtenerUrlArchivo(path!);
@@ -13,7 +13,7 @@ export function VerArchivo({ path }: { path: string | null }) {
     if (res.ok) window.open(res.data.url, "_blank");
   }
   return (
-    <button onClick={abrir} disabled={pending} className="text-emerald-400 hover:underline disabled:opacity-50">
+    <button onClick={abrir} disabled={pending} className="text-primario-claro hover:underline disabled:opacity-50">
       {pending ? "…" : "Ver"}
     </button>
   );

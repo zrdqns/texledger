@@ -1,9 +1,13 @@
-import Link from "next/link";
 import { consultarReporte } from "@/modules/contabilidad/application/reporte-actions";
 import { formatCOP } from "@/shared/cop";
 import { formatFechaBogota, hoyBogota } from "@/shared/fecha";
+import { PageHeader } from "@/components/ui/page-header";
+import { btnSecundario, labelCampo } from "@/components/ui/estilos";
 
 const RE = /^\d{4}-\d{2}-\d{2}$/;
+
+const inputFecha =
+  "rounded-lg border border-borde bg-superficie-alta px-3 py-1.5 text-sm text-texto outline-none focus:border-primario";
 
 export default async function ReportesPage({
   searchParams,
@@ -17,59 +21,60 @@ export default async function ReportesPage({
 
   const { ingresos, egresos, totales } = await consultarReporte(desde, hasta);
 
-  const input = "rounded-md border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-sm text-zinc-100 outline-none focus:border-zinc-500";
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <Link href="/contabilidad" className="text-sm text-zinc-400 hover:text-zinc-100">← Contabilidad</Link>
-        <h2 className="mt-2 text-lg font-semibold text-zinc-100">Reportes</h2>
-      </div>
+      <PageHeader titulo="Reportes" volverHref="/contabilidad" volverLabel="Contabilidad" />
 
       <form className="flex flex-wrap items-end gap-3">
-        <label className="flex flex-col gap-1 text-sm text-zinc-400">Desde
-          <input name="desde" type="date" defaultValue={desde} className={input} />
+        <label className={labelCampo}>Desde
+          <input name="desde" type="date" defaultValue={desde} className={inputFecha} />
         </label>
-        <label className="flex flex-col gap-1 text-sm text-zinc-400">Hasta
-          <input name="hasta" type="date" defaultValue={hasta} className={input} />
+        <label className={labelCampo}>Hasta
+          <input name="hasta" type="date" defaultValue={hasta} className={inputFecha} />
         </label>
-        <button type="submit" className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800">Consultar</button>
+        <button type="submit" className={btnSecundario}>Consultar</button>
       </form>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Tot label="Ingresos" valor={totales.totalIngresos} color="text-emerald-400" />
-        <Tot label="Egresos" valor={totales.totalEgresos} color="text-red-400" />
-        <Tot label="Neto" valor={totales.neto} color={totales.neto >= 0 ? "text-emerald-400" : "text-red-400"} />
+        <Tot label="Ingresos" valor={totales.totalIngresos} tono="ok" />
+        <Tot label="Egresos" valor={totales.totalEgresos} tono="peligro" />
+        <Tot label="Neto" valor={totales.neto} tono={totales.neto >= 0 ? "ok" : "peligro"} />
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
-        <Seccion titulo="Ingresos" filas={ingresos.map((i) => ({ id: i.id, fecha: i.fecha, concepto: i.concepto, valor: i.valor }))} color="text-emerald-400" />
-        <Seccion titulo="Egresos" filas={egresos.map((e) => ({ id: e.id, fecha: e.fecha_pago, concepto: e.concepto, valor: e.valor }))} color="text-red-400" />
+        <Seccion titulo="Ingresos" filas={ingresos.map((i) => ({ id: i.id, fecha: i.fecha, concepto: i.concepto, valor: i.valor }))} tono="ok" />
+        <Seccion titulo="Egresos" filas={egresos.map((e) => ({ id: e.id, fecha: e.fecha_pago, concepto: e.concepto, valor: e.valor }))} tono="peligro" />
       </div>
     </div>
   );
 }
 
-function Tot({ label, valor, color }: { label: string; valor: number; color: string }) {
+const tonoTexto = {
+  ok: "text-emerald-400",
+  peligro: "text-peligro",
+} as const;
+
+function Tot({ label, valor, tono }: { label: string; valor: number; tono: keyof typeof tonoTexto }) {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
-      <p className="text-xs text-zinc-500">{label}</p>
-      <p className={`mt-1 text-xl font-semibold ${color}`}>{formatCOP(valor)}</p>
+    <div className="rounded-xl border border-borde/60 bg-superficie-baja p-4">
+      <p className="text-xs text-texto-tenue">{label}</p>
+      <p className={`mt-1 font-mono text-xl font-semibold tabular-nums ${tonoTexto[tono]}`}>{formatCOP(valor)}</p>
     </div>
   );
 }
 
-function Seccion({ titulo, filas, color }: { titulo: string; filas: { id: string; fecha: string; concepto: string; valor: number }[]; color: string }) {
+function Seccion({ titulo, filas, tono }: { titulo: string; filas: { id: string; fecha: string; concepto: string; valor: number }[]; tono: keyof typeof tonoTexto }) {
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-zinc-300">{titulo}</h3>
-      {filas.length === 0 ? <p className="text-sm text-zinc-500">Sin movimientos.</p> : (
+      <h3 className="mb-2 text-sm font-medium text-texto-suave">{titulo}</h3>
+      {filas.length === 0 ? <p className="text-sm text-texto-tenue">Sin movimientos.</p> : (
         <table className="w-full text-sm">
           <tbody>
             {filas.map((f) => (
-              <tr key={f.id} className="border-b border-zinc-900">
-                <td className="py-2 text-zinc-400">{formatFechaBogota(f.fecha)}</td>
-                <td className="py-2 text-zinc-300">{f.concepto}</td>
-                <td className={`py-2 text-right tabular-nums ${color}`}>{formatCOP(f.valor)}</td>
+              <tr key={f.id} className="border-b border-borde/30">
+                <td className="py-2 text-texto-tenue">{formatFechaBogota(f.fecha)}</td>
+                <td className="py-2 text-texto-suave">{f.concepto}</td>
+                <td className={`py-2 text-right font-mono tabular-nums ${tonoTexto[tono]}`}>{formatCOP(f.valor)}</td>
               </tr>
             ))}
           </tbody>
