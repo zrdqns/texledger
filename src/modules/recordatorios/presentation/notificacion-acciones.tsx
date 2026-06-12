@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { marcarLeida, marcarTodasLeidas, generarNotificacionesAhora } from "../application/notificaciones-actions";
+import { btnSecundario, linkSuave } from "@/components/ui/estilos";
 
 export function MarcarLeidaBoton({ id }: { id: string }) {
   const router = useRouter();
@@ -17,7 +18,7 @@ export function MarcarLeidaBoton({ id }: { id: string }) {
   }
 
   return (
-    <button onClick={onClick} disabled={pending} className="text-sm text-zinc-400 hover:text-zinc-100 disabled:opacity-50">
+    <button onClick={onClick} disabled={pending} className={`${linkSuave} disabled:opacity-50`}>
       {pending ? "…" : "Marcar leída"}
     </button>
   );
@@ -45,11 +46,11 @@ export function NotificacionesToolbar({ hayNoLeidas }: { hayNoLeidas: boolean })
 
   return (
     <div className="flex gap-3">
-      <button onClick={onGenerar} disabled={pending !== null} className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800 disabled:opacity-50">
+      <button onClick={onGenerar} disabled={pending !== null} className={btnSecundario}>
         {pending === "generar" ? "Generando…" : "Generar ahora"}
       </button>
       {hayNoLeidas && (
-        <button onClick={onTodas} disabled={pending !== null} className="rounded-md border border-zinc-700 px-3 py-1.5 text-sm text-zinc-300 hover:bg-zinc-800 disabled:opacity-50">
+        <button onClick={onTodas} disabled={pending !== null} className={btnSecundario}>
           {pending === "todas" ? "Marcando…" : "Marcar todas leídas"}
         </button>
       )}
