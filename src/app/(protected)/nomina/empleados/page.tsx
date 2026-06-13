@@ -5,6 +5,7 @@ import { formatFechaBogota } from "@/shared/fecha";
 import { RetirarEmpleadoBoton } from "@/modules/nomina/presentation/retirar-empleado-boton";
 import { PageHeader } from "@/components/ui/page-header";
 import { CardTabla } from "@/components/ui/card-tabla";
+import { Avatar } from "@/components/ui/avatar";
 import { btnPrimario, filaTabla, linkSuave, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 import type { Empleado } from "@/modules/nomina/domain/tipos";
 
@@ -20,6 +21,7 @@ export default async function EmpleadosPage() {
     <div className="flex flex-col gap-6">
       <PageHeader
         titulo="Empleados"
+        subtitulo={`${empleados.length} ${empleados.length === 1 ? "empleado activo" : "empleados activos"} en nómina`}
         volverHref="/nomina"
         volverLabel="Nómina"
         accion={<Link href="/nomina/empleados/nuevo" className={btnPrimario}>Nuevo empleado</Link>}
@@ -31,9 +33,8 @@ export default async function EmpleadosPage() {
         <table className={tabla}>
           <thead className={theadFila}>
             <tr>
-              <th className={thCelda}>Nombre</th>
+              <th className={thCelda}>Empleado</th>
               <th className={thCelda}>Documento</th>
-              <th className={thCelda}>Cargo</th>
               <th className={`${thCelda} text-right`}>Sueldo básico</th>
               <th className={thCelda}>Seguro</th>
               <th className={thCelda}>Ingreso</th>
@@ -43,13 +44,20 @@ export default async function EmpleadosPage() {
           <tbody>
             {empleados.map((e) => (
               <tr key={e.id} className={filaTabla}>
-                <td className="py-2 text-texto">{e.nombre}</td>
-                <td className="py-2 text-texto-tenue">{e.documento ?? "—"}</td>
-                <td className="py-2 text-texto-suave">{e.cargo ?? "—"}</td>
-                <td className="py-2 text-right font-mono tabular-nums text-texto">{formatCOP(e.sueldo_basico)}</td>
-                <td className="py-2 text-texto-suave">{seguroLabel(e)}</td>
-                <td className="py-2 text-texto-tenue">{e.fecha_ingreso ? formatFechaBogota(e.fecha_ingreso) : "—"}</td>
-                <td className="py-2">
+                <td className="py-2.5">
+                  <div className="flex items-center gap-3">
+                    <Avatar nombre={e.nombre} />
+                    <div className="min-w-0">
+                      <p className="font-medium text-texto">{e.nombre}</p>
+                      <p className="text-xs text-texto-tenue">{e.cargo ?? "Sin cargo"}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="py-2.5 text-texto-tenue">{e.documento ?? "—"}</td>
+                <td className="py-2.5 text-right font-mono tabular-nums text-texto">{formatCOP(e.sueldo_basico)}</td>
+                <td className="py-2.5 text-texto-suave">{seguroLabel(e)}</td>
+                <td className="py-2.5 text-texto-tenue">{e.fecha_ingreso ? formatFechaBogota(e.fecha_ingreso) : "—"}</td>
+                <td className="py-2.5">
                   <div className="flex gap-3">
                     <Link href={`/nomina/empleados/${e.id}/editar`} className={linkSuave}>Editar</Link>
                     <RetirarEmpleadoBoton empleadoId={e.id} />
