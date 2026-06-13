@@ -32,8 +32,48 @@
 :root {
   color-scheme: dark;
 }
+
+/* Cursor personalizado (lagrima clara con borde azul, visible sobre el dark UI). */
 body {
   background-color: var(--color-fondo);
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 3 L19 11 L11.5 12.5 L10 19.5 Z' fill='%23e1e2eb' stroke='%234a8eff' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3, auto;
+}
+a, button, [role="button"], select, summary, label[for], [type="submit"], [type="button"] {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 3 L19 11 L11.5 12.5 L10 19.5 Z' fill='%234a8eff' stroke='%23adc7ff' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3, pointer;
+}
+input:not([type="submit"]):not([type="button"]), textarea {
+  cursor: text;
+}
+
+/* Malla de luz ambiental fija detras de todo (profundidad, sin coste de scroll). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(720px circle at 0% 0%, rgba(74, 142, 255, 0.07), transparent 42%),
+    radial-gradient(820px circle at 100% 100%, rgba(239, 103, 25, 0.05), transparent 45%);
+}
+
+::selection {
+  background-color: rgba(74, 142, 255, 0.3);
+  color: #e1e2eb;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.16);
 }
 
 /* Impresión (desprendible de nómina): fondo blanco y texto negro legible. */
