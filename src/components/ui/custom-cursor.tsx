@@ -73,12 +73,12 @@ export function CustomCursor() {
       className="pointer-events-none fixed left-0 top-0 z-[100] -ml-1 -mt-1 transition-opacity duration-300 [transform:translate3d(-100px,-100px,0)]"
     >
       <div className="cursor-punta">
-        <svg width="26" height="26" viewBox="0 0 26 26" className="drop-shadow-[0_2px_6px_rgba(245,165,36,0.5)]">
+        <svg width="26" height="26" viewBox="0 0 26 26" className="drop-shadow-[0_2px_6px_rgba(245,165,36,0.55)]">
           <path
-            d="M4 3 L21 12 L12.5 13.5 L11 21 Z"
+            d="M5 4 C 17 2 24 9 20 17 C 18.3 20.6 13.6 19.6 12.8 15.8 C 12 11.8 9.4 8 5 4 Z"
             fill="#f5a524"
             stroke="#1a1404"
-            strokeWidth="1.4"
+            strokeWidth="1.3"
             strokeLinejoin="round"
           />
         </svg>

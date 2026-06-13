@@ -87,7 +87,46 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <GraficoIngresosEgresos serie={r.serie} />
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <GraficoIngresosEgresos serie={r.serie} />
+        </div>
+        <div className="rounded-xl border border-white/10 bg-superficie-baja p-5">
+          <h3 className="font-semibold text-texto">Balance del mes</h3>
+          <p className="mt-1 text-xs text-texto-tenue">Proporción ingresos vs egresos</p>
+          {(() => {
+            const max = Math.max(r.cards.ingresosMes, r.cards.egresosMes, 1);
+            return (
+              <div className="mt-5 flex flex-col gap-5">
+                <div>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-sm text-texto-suave">Ingresos</span>
+                    <span className="font-mono text-sm font-semibold tabular-nums text-emerald-400">{formatCOP(r.cards.ingresosMes)}</span>
+                  </div>
+                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-superficie-alta">
+                    <div className="h-full rounded-full bg-emerald-400/80" style={{ width: `${(r.cards.ingresosMes / max) * 100}%` }} />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-sm text-texto-suave">Egresos</span>
+                    <span className="font-mono text-sm font-semibold tabular-nums text-peligro">{formatCOP(r.cards.egresosMes)}</span>
+                  </div>
+                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-superficie-alta">
+                    <div className="h-full rounded-full bg-peligro/80" style={{ width: `${(r.cards.egresosMes / max) * 100}%` }} />
+                  </div>
+                </div>
+                <div className="mt-1 flex items-baseline justify-between border-t border-white/10 pt-4">
+                  <span className="text-sm font-medium text-texto">Neto</span>
+                  <span className={r.cards.netoMes >= 0 ? "font-mono text-lg font-bold tabular-nums text-emerald-400" : "font-mono text-lg font-bold tabular-nums text-peligro"}>
+                    {formatCOP(r.cards.netoMes)}
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </div>
 
       <CardTabla titulo="Últimos movimientos">
         {r.ultimos.length === 0 ? (
