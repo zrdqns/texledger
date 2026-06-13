@@ -57,10 +57,10 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="group mt-1 flex items-center justify-center gap-2 rounded-lg bg-primario py-2.5 text-sm font-semibold text-white shadow-[0_0_20px_rgba(74,142,255,0.35)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
+        className="group mt-1 flex items-center justify-center gap-2 rounded-lg bg-primario py-2.5 text-sm font-semibold text-fondo shadow-[0_0_20px_rgba(245,165,36,0.4)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:brightness-110 active:scale-[0.98] disabled:opacity-50"
       >
         {pending ? "Ingresando…" : "Ingresar al panel"}
-        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 transition-transform duration-300 group-hover:translate-x-0.5">
+        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-fondo/20 transition-transform duration-300 group-hover:translate-x-0.5">
           <ArrowRight className="h-3 w-3" aria-hidden />
         </span>
       </button>
