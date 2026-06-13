@@ -19,36 +19,36 @@ export function GraficoIngresosEgresos({ serie }: { serie: PuntoSerie[] }) {
           <AreaChart data={data}>
             <defs>
               <linearGradient id="gradIngresos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#4a8eff" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="#4a8eff" stopOpacity={0} />
+                <stop offset="0%" stopColor="#f5a524" stopOpacity={0.4} />
+                <stop offset="100%" stopColor="#f5a524" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="gradEgresos" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ef6719" stopOpacity={0.3} />
-                <stop offset="100%" stopColor="#ef6719" stopOpacity={0} />
+                <stop offset="0%" stopColor="#f97316" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#f97316" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#272a31" vertical={false} />
-            <XAxis dataKey="label" tick={{ fill: "#8b90a0", fontSize: 12 }} axisLine={{ stroke: "#414754" }} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#29251b" vertical={false} />
+            <XAxis dataKey="label" tick={{ fill: "#948b76", fontSize: 12 }} axisLine={{ stroke: "#3a3427" }} tickLine={false} />
             <YAxis
               tickFormatter={(v: number) => nfCompacto.format(v)}
-              tick={{ fill: "#8b90a0", fontSize: 12 }}
+              tick={{ fill: "#948b76", fontSize: 12 }}
               axisLine={false}
               tickLine={false}
               width={56}
             />
             <Tooltip
-              cursor={{ stroke: "#414754", strokeDasharray: "3 3" }}
-              contentStyle={{ backgroundColor: "#1d2026", border: "1px solid #414754", borderRadius: 8 }}
-              labelStyle={{ color: "#8b90a0" }}
+              cursor={{ stroke: "#3a3427", strokeDasharray: "3 3" }}
+              contentStyle={{ backgroundColor: "#1d1a13", border: "1px solid #3a3427", borderRadius: 8 }}
+              labelStyle={{ color: "#948b76" }}
               formatter={(value, name) => [formatCOP(Number(value)), name === "ingresos" ? "Ingresos" : "Egresos"]}
             />
             <Legend
               formatter={(value: string) => (
-                <span style={{ color: "#c1c6d7", fontSize: 12 }}>{value === "ingresos" ? "Ingresos" : "Egresos"}</span>
+                <span style={{ color: "#d0c9b8", fontSize: 12 }}>{value === "ingresos" ? "Ingresos" : "Egresos"}</span>
               )}
             />
-            <Area type="monotone" dataKey="ingresos" stroke="#4a8eff" strokeWidth={2.5} fill="url(#gradIngresos)" dot={false} activeDot={{ r: 4, fill: "#adc7ff" }} />
-            <Area type="monotone" dataKey="egresos" stroke="#ef6719" strokeWidth={2.5} fill="url(#gradEgresos)" dot={false} activeDot={{ r: 4, fill: "#ffb695" }} />
+            <Area type="monotone" dataKey="ingresos" stroke="#f5a524" strokeWidth={2.5} fill="url(#gradIngresos)" dot={false} activeDot={{ r: 4, fill: "#fbc23f" }} />
+            <Area type="monotone" dataKey="egresos" stroke="#f97316" strokeWidth={2.5} fill="url(#gradEgresos)" dot={false} activeDot={{ r: 4, fill: "#fdba74" }} />
           </AreaChart>
         </ResponsiveContainer>
       </div>

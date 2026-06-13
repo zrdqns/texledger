@@ -1,51 +1,89 @@
 @import "tailwindcss";
 
 @theme {
-  --color-fondo: #10131a;
-  --color-superficie-baja: #191c22;
-  --color-superficie: #1d2026;
-  --color-superficie-alta: #272a31;
-  --color-borde: #414754;
-  --color-texto: #e1e2eb;
-  --color-texto-suave: #c1c6d7;
-  --color-texto-tenue: #8b90a0;
-  --color-primario: #4a8eff;
-  --color-primario-claro: #adc7ff;
-  --color-acento: #ef6719;
-  --color-peligro: #ffb4ab;
+  /* ── Paleta industrial: ámbar/acero sobre cargón cálido ── */
+  --color-fondo: #0e0d0b;
+  --color-superficie-baja: #16140f;
+  --color-superficie: #1d1a13;
+  --color-superficie-alta: #29251b;
+  --color-borde: #3a3427;
+  --color-texto: #f6f3ec;
+  --color-texto-suave: #d0c9b8;
+  --color-texto-tenue: #948b76;
+  --color-primario: #f5a524;
+  --color-primario-claro: #fbc23f;
+  --color-acento: #f97316;
+  --color-peligro: #f87171;
+
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
-  --animate-aparecer: aparecer 0.45s ease-out both;
+
+  --animate-aparecer: aparecer 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+  --animate-flotar: flotar 9s ease-in-out infinite;
+  --animate-brillo: brillo 4s ease-in-out infinite;
+  --animate-deslizar: deslizar 0.6s cubic-bezier(0.32, 0.72, 0, 1) both;
 }
 
 @keyframes aparecer {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+@keyframes flotar {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(12px, -16px);
+  }
+}
+@keyframes brillo {
+  0%, 100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes deslizar {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
 :root {
   color-scheme: dark;
 }
-
-/* Cursor personalizado (lagrima clara con borde azul, visible sobre el dark UI). */
 body {
   background-color: var(--color-fondo);
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 3 L19 11 L11.5 12.5 L10 19.5 Z' fill='%23e1e2eb' stroke='%234a8eff' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3, auto;
-}
-a, button, [role="button"], select, summary, label[for], [type="submit"], [type="button"] {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath d='M4 3 L19 11 L11.5 12.5 L10 19.5 Z' fill='%234a8eff' stroke='%23adc7ff' stroke-width='1.4' stroke-linejoin='round'/%3E%3C/svg%3E") 4 3, pointer;
-}
-input:not([type="submit"]):not([type="button"]), textarea {
-  cursor: text;
 }
 
-/* Malla de luz ambiental fija detras de todo (profundidad, sin coste de scroll). */
+/* Cursor personalizado: lo dibuja <CustomCursor/>; ocultamos el nativo solo cuando
+   el componente monta (clase en <html>) y solo en dispositivos con puntero fino. */
+@media (pointer: fine) {
+  html.cursor-custom,
+  html.cursor-custom * {
+    cursor: none !important;
+  }
+}
+.cursor-punta {
+  transition: transform 0.2s ease-out;
+}
+[data-activo="1"] .cursor-punta {
+  transform: scale(1.7);
+}
+
+/* Malla de luz ambiental fija (ámbar/naranja) detrás de todo. */
 body::before {
   content: "";
   position: fixed;
@@ -53,13 +91,13 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(720px circle at 0% 0%, rgba(74, 142, 255, 0.07), transparent 42%),
-    radial-gradient(820px circle at 100% 100%, rgba(239, 103, 25, 0.05), transparent 45%);
+    radial-gradient(760px circle at 0% 0%, rgba(245, 165, 36, 0.09), transparent 42%),
+    radial-gradient(820px circle at 100% 100%, rgba(249, 115, 22, 0.06), transparent 45%);
 }
 
 ::selection {
-  background-color: rgba(74, 142, 255, 0.3);
-  color: #e1e2eb;
+  background-color: rgba(245, 165, 36, 0.3);
+  color: #f6f3ec;
 }
 
 ::-webkit-scrollbar {
@@ -67,13 +105,23 @@ body::before {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(245, 165, 36, 0.12);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.16);
+  background-color: rgba(245, 165, 36, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Impresión (desprendible de nómina): fondo blanco y texto negro legible. */

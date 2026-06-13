@@ -11,7 +11,7 @@ import { btnPrimario, card, input, pillActiva, pillInactiva } from "@/components
 
 type Tipo = "entrada" | "salida" | "ajuste";
 
-const tipoPillActiva = "rounded-lg bg-primario px-3 py-1.5 text-sm capitalize text-white";
+const tipoPillActiva = "rounded-lg bg-primario px-3 py-1.5 text-sm font-medium capitalize text-fondo";
 
 export function MovimientoModal({ telaId, consumoDefault }: { telaId: string; consumoDefault: number | null }) {
   const router = useRouter();
