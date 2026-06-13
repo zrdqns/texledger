@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AlertTriangle, FileWarning, Package, type LucideIcon } from "lucide-react";
 import { listarNotificacionesNoLeidas } from "@/modules/recordatorios/application/notificaciones-actions";
 import { listarRecordatorios } from "@/modules/recordatorios/application/recordatorios-actions";
 import { diasRestantes, esVencido } from "@/modules/recordatorios/domain/estado";
@@ -9,6 +10,34 @@ import { RecordatorioAcciones } from "@/modules/recordatorios/presentation/recor
 import { formatFechaBogota, formatTimestampBogota, hoyBogota } from "@/shared/fecha";
 import { CardTabla } from "@/components/ui/card-tabla";
 import { btnPrimario, filaTabla, subtituloSeccion, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+
+const ESTILO_NOTIF: Record<string, { card: string; barra: string; iconoWrap: string; Icono: LucideIcon }> = {
+  recordatorio_vencido: {
+    card: "border-peligro/40 bg-peligro/5 hover:border-peligro/60",
+    barra: "bg-gradient-to-b from-peligro/80 to-transparent",
+    iconoWrap: "bg-peligro/15 text-peligro",
+    Icono: AlertTriangle,
+  },
+  bajo_stock: {
+    card: "border-acento/40 bg-acento/5 hover:border-acento/60",
+    barra: "bg-gradient-to-b from-acento/80 to-transparent",
+    iconoWrap: "bg-acento/15 text-acento",
+    Icono: Package,
+  },
+  factura_sin_declarar: {
+    card: "border-primario/40 bg-primario/5 hover:border-primario/60",
+    barra: "bg-gradient-to-b from-primario/80 to-transparent",
+    iconoWrap: "bg-primario/15 text-primario-claro",
+    Icono: FileWarning,
+  },
+};
+
+const NOTIF_DEFAULT = {
+  card: "border-white/10 bg-superficie-baja hover:border-white/20",
+  barra: "bg-gradient-to-b from-texto-tenue/50 to-transparent",
+  iconoWrap: "bg-superficie-alta text-texto-tenue",
+  Icono: AlertTriangle as LucideIcon,
+};
 
 function BadgeEstado({ r, hoy }: { r: RecordatorioConFactura; hoy: string }) {
   if (r.estado === "cumplido") return <span className="text-emerald-400">Cumplido</span>;
@@ -34,21 +63,26 @@ export default async function RecordatoriosPage() {
         {noLeidas.length === 0 ? (
           <p className="text-sm text-texto-tenue">No tienes notificaciones pendientes.</p>
         ) : (
-          <ul className="flex flex-col gap-2">
-            {noLeidas.map((n) => (
-              <li key={n.id} className="group relative flex items-start justify-between gap-4 overflow-hidden rounded-xl border border-white/10 bg-superficie-baja p-4 transition-colors duration-300 hover:border-acento/40">
-                <div
-                  className="absolute inset-y-0 left-0 w-0.5 bg-gradient-to-b from-acento/70 to-transparent"
-                  aria-hidden
-                />
-                <div>
-                  <p className="font-medium text-texto">{n.titulo}</p>
-                  <p className="text-sm text-texto-tenue">{n.mensaje}</p>
-                  <p className="mt-1 text-xs text-texto-tenue">{formatTimestampBogota(n.created_at)}</p>
-                </div>
-                <MarcarLeidaBoton id={n.id} />
-              </li>
-            ))}
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {noLeidas.map((n) => {
+              const est = ESTILO_NOTIF[n.tipo] ?? NOTIF_DEFAULT;
+              return (
+                <li key={n.id} className={`group relative flex items-start justify-between gap-3 overflow-hidden rounded-xl border p-4 transition-colors duration-300 ${est.card}`}>
+                  <div className={`absolute inset-y-0 left-0 w-1 ${est.barra}`} aria-hidden />
+                  <div className="flex items-start gap-3">
+                    <span className={`rounded-lg p-2 ${est.iconoWrap}`}>
+                      <est.Icono className="h-4 w-4" aria-hidden />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-medium text-texto">{n.titulo}</p>
+                      <p className="text-sm text-texto-tenue">{n.mensaje}</p>
+                      <p className="mt-1 text-xs text-texto-tenue">{formatTimestampBogota(n.created_at)}</p>
+                    </div>
+                  </div>
+                  <MarcarLeidaBoton id={n.id} />
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>
