@@ -8,11 +8,11 @@ export default function LoginPage() {
         <div aria-hidden className="animate-flotar absolute -bottom-16 right-0 h-72 w-72 rounded-full bg-acento/15 blur-[110px] [animation-delay:1.5s]" />
         <div
           aria-hidden
-          className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(rgba(245,165,36,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(245,165,36,0.6)_1px,transparent_1px)] [background-size:38px_38px]"
+          className="absolute inset-0 opacity-[0.04] [background-image:linear-gradient(rgba(91,124,250,0.6)_1px,transparent_1px),linear-gradient(90deg,rgba(91,124,250,0.6)_1px,transparent_1px)] [background-size:38px_38px]"
         />
 
         <div className="animate-aparecer relative flex items-center gap-3">
-          <span className="animate-brillo flex h-10 w-10 items-center justify-center rounded-xl bg-primario text-lg font-bold text-fondo shadow-[0_0_25px_rgba(245,165,36,0.55)]">
+          <span className="animate-brillo flex h-10 w-10 items-center justify-center rounded-xl bg-primario text-lg font-bold text-fondo shadow-[0_0_25px_rgba(91,124,250,0.55)]">
             T
           </span>
           <div>
@@ -50,7 +50,7 @@ export default function LoginPage() {
         <div aria-hidden className="animate-flotar absolute right-10 top-10 h-40 w-40 rounded-full bg-primario/10 blur-[90px] lg:hidden" />
         <div className="animate-aparecer w-full max-w-sm [animation-delay:120ms]">
           <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primario font-bold text-fondo shadow-[0_0_15px_rgba(245,165,36,0.45)]">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primario font-bold text-fondo shadow-[0_0_15px_rgba(91,124,250,0.45)]">
               T
             </span>
             <p className="text-lg font-bold text-texto">TexLedger</p>

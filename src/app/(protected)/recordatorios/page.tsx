@@ -9,7 +9,8 @@ import { MarcarLeidaBoton, NotificacionesToolbar } from "@/modules/recordatorios
 import { RecordatorioAcciones } from "@/modules/recordatorios/presentation/recordatorio-acciones";
 import { formatFechaBogota, formatTimestampBogota, hoyBogota } from "@/shared/fecha";
 import { CardTabla } from "@/components/ui/card-tabla";
-import { btnPrimario, filaTabla, subtituloSeccion, tabla, theadFila, thCelda } from "@/components/ui/estilos";
+import { StatCard } from "@/components/ui/stat-card";
+import { badgeAcento, badgeNeutro, badgePeligro, btnPrimario, filaTabla, subtituloSeccion, tabla, theadFila, thCelda } from "@/components/ui/estilos";
 
 const ESTILO_NOTIF: Record<string, { card: string; barra: string; iconoWrap: string; Icono: LucideIcon }> = {
   recordatorio_vencido: {
@@ -53,13 +54,27 @@ export default async function RecordatoriosPage() {
   const [noLeidas, recordatorios] = await Promise.all([listarNotificacionesNoLeidas(), listarRecordatorios()]);
   const hoy = hoyBogota();
 
+  const cont = (t: string) => noLeidas.filter((n) => n.tipo === t).length;
+  const pendientes = recordatorios.filter((r) => r.estado !== "cumplido" && !esVencido(r.fecha_objetivo, hoy)).length;
+  const vencidos = recordatorios.filter((r) => r.estado !== "cumplido" && esVencido(r.fecha_objetivo, hoy)).length;
+
   return (
     <div className="flex flex-col gap-10">
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h2 className={subtituloSeccion}>Notificaciones</h2>
+          <div className="flex items-center gap-3">
+            <h2 className={subtituloSeccion}>Notificaciones</h2>
+            {noLeidas.length > 0 && <span className={badgeAcento}>{noLeidas.length} sin leer</span>}
+          </div>
           <NotificacionesToolbar hayNoLeidas={noLeidas.length > 0} />
         </div>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <StatCard label="Recordatorios vencidos" valor={String(cont("recordatorio_vencido"))} icono={AlertTriangle} tono={cont("recordatorio_vencido") > 0 ? "peligro" : "neutro"} />
+          <StatCard label="Telas bajo stock" valor={String(cont("bajo_stock"))} icono={Package} tono="neutro" />
+          <StatCard label="Facturas sin declarar" valor={String(cont("factura_sin_declarar"))} icono={FileWarning} tono="neutro" />
+        </div>
+
         {noLeidas.length === 0 ? (
           <p className="text-sm text-texto-tenue">No tienes notificaciones pendientes.</p>
         ) : (
@@ -88,6 +103,10 @@ export default async function RecordatoriosPage() {
       </section>
 
       <section className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <span className={badgeNeutro}>{pendientes} pendientes</span>
+          {vencidos > 0 && <span className={badgePeligro}>{vencidos} vencidos</span>}
+        </div>
         <CardTabla
           titulo="Recordatorios"
           accion={<Link href="/recordatorios/nuevo" className={btnPrimario}>Nuevo recordatorio</Link>}
