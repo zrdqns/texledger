@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Paleta industrial: ámbar/acero sobre cargón cálido ── */
-  --color-fondo: #0e0d0b;
-  --color-superficie-baja: #16140f;
-  --color-superficie: #1d1a13;
-  --color-superficie-alta: #29251b;
-  --color-borde: #3a3427;
-  --color-texto: #f6f3ec;
-  --color-texto-suave: #d0c9b8;
-  --color-texto-tenue: #948b76;
-  --color-primario: #f5a524;
-  --color-primario-claro: #fbc23f;
-  --color-acento: #f97316;
-  --color-peligro: #f87171;
+  /* ── Paleta Índigo Denim: índigo de teñido + latón sobre azul-noche ── */
+  --color-fondo: #0b0e16;
+  --color-superficie-baja: #11151f;
+  --color-superficie: #161d2b;
+  --color-superficie-alta: #20283a;
+  --color-borde: #2d3850;
+  --color-texto: #eef1fa;
+  --color-texto-suave: #c1cae0;
+  --color-texto-tenue: #7e89a4;
+  --color-primario: #5b7cfa;
+  --color-primario-claro: #8aa2ff;
+  --color-acento: #d6a445;
+  --color-peligro: #f2607a;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
@@ -76,11 +76,45 @@ body {
     cursor: none !important;
   }
 }
-.cursor-punta {
-  transition: transform 0.2s ease-out;
+/* Cursor de dos piezas: anillo con inercia + punto preciso. */
+.cursor-ring,
+.cursor-dot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  pointer-events: none;
+  border-radius: 9999px;
+  transition: opacity 0.3s ease;
+  will-change: transform;
 }
-[data-activo="1"] .cursor-punta {
-  transform: scale(1.7);
+.cursor-ring {
+  height: 34px;
+  width: 34px;
+  border: 1.5px solid rgba(91, 124, 250, 0.7);
+  box-shadow: 0 0 12px rgba(91, 124, 250, 0.25);
+  /* solo animamos color/tamaño aquí; el transform lo maneja el rAF. */
+  transition: opacity 0.3s ease, height 0.25s cubic-bezier(0.32, 0.72, 0, 1),
+    width 0.25s cubic-bezier(0.32, 0.72, 0, 1), background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+.cursor-dot {
+  height: 6px;
+  width: 6px;
+  background-color: #8aa2ff;
+  box-shadow: 0 0 8px rgba(91, 124, 250, 0.7);
+  transition: opacity 0.3s ease, height 0.2s ease, width 0.2s ease, background-color 0.2s ease;
+}
+.cursor-ring[data-activo="1"] {
+  height: 52px;
+  width: 52px;
+  background-color: rgba(91, 124, 250, 0.12);
+  border-color: rgba(138, 162, 255, 0.9);
+}
+.cursor-dot[data-activo="1"] {
+  height: 4px;
+  width: 4px;
+  background-color: #fff;
 }
 
 /* Malla de luz ambiental fija (ámbar/naranja) detrás de todo. */
@@ -91,13 +125,13 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(760px circle at 0% 0%, rgba(245, 165, 36, 0.09), transparent 42%),
-    radial-gradient(820px circle at 100% 100%, rgba(249, 115, 22, 0.06), transparent 45%);
+    radial-gradient(760px circle at 0% 0%, rgba(91, 124, 250, 0.09), transparent 42%),
+    radial-gradient(820px circle at 100% 100%, rgba(138, 162, 255, 0.06), transparent 45%);
 }
 
 ::selection {
-  background-color: rgba(245, 165, 36, 0.3);
-  color: #f6f3ec;
+  background-color: rgba(91, 124, 250, 0.3);
+  color: #eef1fa;
 }
 
 ::-webkit-scrollbar {
@@ -105,13 +139,13 @@ body::before {
   height: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(245, 165, 36, 0.12);
+  background-color: rgba(91, 124, 250, 0.12);
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(245, 165, 36, 0.25);
+  background-color: rgba(91, 124, 250, 0.25);
 }
 
 @media (prefers-reduced-motion: reduce) {

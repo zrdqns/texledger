@@ -18,7 +18,7 @@ export function Sidebar() {
   return (
     <aside className="flex w-60 flex-col gap-1 border-r border-white/5 bg-superficie-baja p-4 shadow-xl print:hidden">
       <div className="mb-6 flex items-center gap-3 px-2">
-        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primario font-bold text-fondo shadow-[0_0_15px_rgba(245,165,36,0.45)]">
+        <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primario font-bold text-fondo shadow-[0_0_15px_rgba(91,124,250,0.45)]">
           T
         </span>
         <div>
@@ -36,7 +36,7 @@ export function Sidebar() {
               href={it.href}
               className={
                 activo
-                  ? "flex items-center gap-3 rounded-lg bg-primario px-3 py-2.5 text-sm font-bold text-fondo shadow-[0_0_15px_rgba(245,165,36,0.35)] transition-all duration-200"
+                  ? "flex items-center gap-3 rounded-lg bg-primario px-3 py-2.5 text-sm font-bold text-fondo shadow-[0_0_15px_rgba(91,124,250,0.35)] transition-all duration-200"
                   : "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-texto-tenue transition-all duration-200 hover:bg-white/5 hover:text-texto"
               }
             >

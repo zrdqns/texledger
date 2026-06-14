@@ -5,7 +5,7 @@
  * consts separadas; la única composición permitida es concatenar consts enteras.
  */
 export const btnPrimario =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-primario px-4 py-2 text-sm font-semibold text-fondo shadow-[0_0_18px_rgba(245,165,36,0.35)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:brightness-110 active:scale-95 disabled:opacity-50";
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-primario px-4 py-2 text-sm font-semibold text-fondo shadow-[0_0_18px_rgba(91,124,250,0.35)] transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:brightness-110 active:scale-95 disabled:opacity-50";
 export const btnSecundario =
   "inline-flex items-center justify-center gap-2 rounded-lg border border-white/15 bg-superficie px-4 py-2 text-sm font-medium text-texto-suave transition-colors hover:border-primario/40 hover:bg-white/5 hover:text-texto disabled:opacity-50";
 export const btnPeligroTexto = "text-sm text-peligro transition-opacity hover:opacity-80 disabled:opacity-50";
@@ -31,6 +31,6 @@ export const filaTabla = "border-b border-white/5 transition-colors hover:bg-pri
 export const linkSuave = "text-sm text-texto-tenue transition-colors hover:text-texto";
 export const subtituloSeccion = "text-lg font-semibold text-texto";
 export const pillActiva =
-  "rounded-full bg-primario px-3.5 py-1.5 text-sm font-bold text-fondo shadow-[0_0_12px_rgba(245,165,36,0.4)]";
+  "rounded-full bg-primario px-3.5 py-1.5 text-sm font-bold text-fondo shadow-[0_0_12px_rgba(91,124,250,0.4)]";
 export const pillInactiva =
   "rounded-full border border-white/10 bg-superficie px-3.5 py-1.5 text-sm text-texto-suave transition-colors hover:border-primario/40 hover:text-texto";
