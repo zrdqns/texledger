@@ -12,6 +12,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { requireUser } from "@/core/auth/guard";
+import { obtenerPerfilActual } from "@/modules/perfil/application/perfil-actions";
 import { obtenerResumenDashboard } from "@/modules/dashboard/application/dashboard-actions";
 import { GraficoRendimiento } from "@/modules/dashboard/presentation/grafico-rendimiento";
 import { MovimientosRecientes } from "@/modules/dashboard/presentation/movimientos-recientes";
@@ -81,8 +82,8 @@ function PortfolioCard({
 }
 
 export default async function DashboardPage() {
-  const [user, r] = await Promise.all([requireUser(), obtenerResumenDashboard()]);
-  const nombre = nombreDesdeEmail(user.email ?? "");
+  const [user, perfil, r] = await Promise.all([requireUser(), obtenerPerfilActual(), obtenerResumenDashboard()]);
+  const nombre = perfil?.nombre?.trim() || nombreDesdeEmail(user.email ?? "");
   const hoy = hoyBogota();
 
   const mesActual = r.serie.at(-1);

@@ -1,6 +1,8 @@
 import { requireUser } from "@/core/auth/guard";
 import { Sidebar } from "@/components/ui/sidebar";
 import { Campana } from "@/modules/recordatorios/presentation/campana";
+import { PerfilMenu } from "@/modules/perfil/presentation/perfil-menu";
+import { obtenerPerfilActual } from "@/modules/perfil/application/perfil-actions";
 
 export default async function ProtectedLayout({
   children,
@@ -9,7 +11,9 @@ export default async function ProtectedLayout({
 }) {
   const user = await requireUser();
   const email = user.email ?? "";
-  const inicial = (email[0] ?? "U").toUpperCase();
+  const perfil = await obtenerPerfilActual();
+  const nombre = perfil?.nombre?.trim() || email.split("@")[0] || "Usuario";
+  const fotoUrl = perfil?.foto_url ?? null;
 
   return (
     <div className="flex min-h-screen">
@@ -17,19 +21,9 @@ export default async function ProtectedLayout({
       <div className="flex flex-1 flex-col">
         <header className="flex h-16 items-center justify-between border-b border-white/10 px-6 print:hidden">
           <h1 className="text-sm font-medium text-texto-suave">Panel</h1>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-4">
             <Campana />
-            <div className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-3 transition-colors hover:bg-white/5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primario/20 text-sm font-semibold text-primario-claro">
-                {inicial}
-              </span>
-              <span className="hidden text-xs text-texto-tenue sm:block">{email}</span>
-            </div>
-            <form action="/auth/signout" method="post">
-              <button className="text-sm text-texto-tenue transition-colors hover:text-texto">
-                Salir
-              </button>
-            </form>
+            <PerfilMenu nombre={nombre} email={email} fotoUrl={fotoUrl} />
           </div>
         </header>
         <main className="flex-1 p-6 print:p-0">

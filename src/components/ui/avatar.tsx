@@ -20,10 +20,24 @@ function colorDe(nombre: string): string {
   return PALETA[Math.abs(h) % PALETA.length]!;
 }
 
-export function Avatar({ nombre }: { nombre: string }) {
+export function Avatar({ nombre, src, size = 36 }: { nombre: string; src?: string | null; size?: number }) {
+  if (src) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- data URL en BD; next/image no aporta aquí
+      <img
+        src={src}
+        alt={nombre}
+        width={size}
+        height={size}
+        style={{ width: size, height: size }}
+        className="shrink-0 rounded-full object-cover ring-1 ring-white/10"
+      />
+    );
+  }
   return (
     <span
-      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${colorDe(nombre)}`}
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.34) }}
+      className={`flex shrink-0 items-center justify-center rounded-full font-semibold ${colorDe(nombre)}`}
       aria-hidden
     >
       {iniciales(nombre)}

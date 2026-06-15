@@ -52,7 +52,7 @@ export default async function LiquidacionesPage() {
               <tr key={l.id} className={filaTabla}>
                 <td className="py-2.5">
                   <div className="flex items-center gap-3">
-                    <Avatar nombre={l.empleados?.nombre ?? "—"} />
+                    <Avatar nombre={l.empleados?.nombre ?? "—"} src={l.empleados?.foto_url} />
                     <span className="font-medium text-texto">{l.empleados?.nombre ?? "—"}</span>
                   </div>
                 </td>

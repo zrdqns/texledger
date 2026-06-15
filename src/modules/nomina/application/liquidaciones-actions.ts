@@ -9,7 +9,7 @@ import { liquidacionSchema } from "./schemas";
 import { calcularLiquidacion } from "../domain/liquidacion";
 import type { Empleado, ParametroNomina, LiquidacionConEmpleado } from "../domain/tipos";
 
-const JOIN_EMPLEADO = "*, empleados(nombre, documento, cargo)";
+const JOIN_EMPLEADO = "*, empleados(nombre, documento, cargo, foto_url)";
 
 export async function listarLiquidaciones(): Promise<LiquidacionConEmpleado[]> {
   await requireUser();
