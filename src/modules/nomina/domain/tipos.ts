@@ -22,6 +22,7 @@ export type Empleado = {
   seguro_valor: number;
   activo: boolean;
   fecha_ingreso: string | null;
+  foto_url: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -62,5 +63,5 @@ export type Liquidacion = {
 };
 
 export type LiquidacionConEmpleado = Liquidacion & {
-  empleados: { nombre: string; documento: string | null; cargo: string | null } | null;
+  empleados: { nombre: string; documento: string | null; cargo: string | null; foto_url: string | null } | null;
 };

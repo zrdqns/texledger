@@ -46,7 +46,7 @@ export default async function EmpleadosPage() {
               <tr key={e.id} className={filaTabla}>
                 <td className="py-2.5">
                   <div className="flex items-center gap-3">
-                    <Avatar nombre={e.nombre} />
+                    <Avatar nombre={e.nombre} src={e.foto_url} />
                     <div className="min-w-0">
                       <p className="font-medium text-texto">{e.nombre}</p>
                       <p className="text-xs text-texto-tenue">{e.cargo ?? "Sin cargo"}</p>

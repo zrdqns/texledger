@@ -18,6 +18,7 @@ export const empleadoSchema = z.object({
   seguro_tipo: z.enum(["fijo", "porcentaje", "ninguno"]),
   seguro_valor: z.number().min(0),
   fecha_ingreso: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha YYYY-MM-DD").optional(),
+  foto_url: z.string().max(600000, "Imagen demasiado grande").nullable().optional(),
 });
 export const editarEmpleadoSchema = empleadoSchema.extend({ id: z.string().uuid() });
 

@@ -5,6 +5,7 @@ import { formatCOP } from "@/shared/cop";
 import { formatTimestampBogota } from "@/shared/fecha";
 import { formatPeriodo } from "@/modules/nomina/presentation/meses";
 import { ImprimirBoton } from "@/modules/nomina/presentation/imprimir-boton";
+import { Avatar } from "@/components/ui/avatar";
 import { linkSuave } from "@/components/ui/estilos";
 
 export default async function DesprendiblePage({ params }: { params: Promise<{ id: string }> }) {
@@ -30,14 +31,17 @@ export default async function DesprendiblePage({ params }: { params: Promise<{ i
           <p className="text-sm text-texto-tenue">Generado: {formatTimestampBogota(liq.created_at)}</p>
         </div>
 
-        <div className="mt-4 grid gap-1 text-sm">
-          <p className="font-medium text-texto">{liq.empleados?.nombre ?? "—"}</p>
-          {liq.empleados?.documento && <p className="text-texto-tenue">Documento: {liq.empleados.documento}</p>}
-          {liq.empleados?.cargo && <p className="text-texto-tenue">Cargo: {liq.empleados.cargo}</p>}
-          <p className="text-texto-tenue">Sueldo básico: <span className="font-mono tabular-nums">{formatCOP(liq.sueldo_basico)}</span></p>
-          {(liq.incapacidades_dias > 0 || liq.licencias_dias > 0) && (
-            <p className="text-texto-tenue">Incapacidades: {liq.incapacidades_dias} días · Licencias: {liq.licencias_dias} días</p>
-          )}
+        <div className="mt-4 flex items-start gap-4">
+          <Avatar nombre={liq.empleados?.nombre ?? "—"} src={liq.empleados?.foto_url} size={56} />
+          <div className="grid gap-1 text-sm">
+            <p className="font-medium text-texto">{liq.empleados?.nombre ?? "—"}</p>
+            {liq.empleados?.documento && <p className="text-texto-tenue">Documento: {liq.empleados.documento}</p>}
+            {liq.empleados?.cargo && <p className="text-texto-tenue">Cargo: {liq.empleados.cargo}</p>}
+            <p className="text-texto-tenue">Sueldo básico: <span className="font-mono tabular-nums">{formatCOP(liq.sueldo_basico)}</span></p>
+            {(liq.incapacidades_dias > 0 || liq.licencias_dias > 0) && (
+              <p className="text-texto-tenue">Incapacidades: {liq.incapacidades_dias} días · Licencias: {liq.licencias_dias} días</p>
+            )}
+          </div>
         </div>
 
         <table className="mt-6 w-full text-sm [&_td]:py-1.5">
