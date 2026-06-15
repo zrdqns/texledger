@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TexLedger — Sistema contable textil
 
-## Getting Started
+Plataforma web para la gestión contable y operativa de una empresa de manufactura
+textil colombiana: inventario de telas, pedidos de producción, contabilidad,
+nómina y recordatorios, en un solo panel.
 
-First, run the development server:
+> **Proyecto de portafolio.** El código es visible para evaluación, pero su uso
+> está restringido. Ver [LICENSE](LICENSE): *Todos los derechos reservados*.
+
+## Módulos
+
+- **Dashboard** — resultado neto del mes, indicadores, gráfico de rendimiento y movimientos recientes.
+- **Inventario** — telas por rollos/metraje, alertas de bajo stock, importación desde Excel.
+- **Pedidos** — conciliación de tela por pedido de producción (consumo vs. saldo).
+- **Contabilidad** — ingresos, egresos, facturas, cuentas y reportes.
+- **Nómina** — empleados, parámetros por año y liquidaciones con desprendible imprimible.
+- **Recordatorios y notificaciones** — vencimientos de facturas, bajo stock y pendientes.
+
+## Stack
+
+Next.js (App Router) · React · TypeScript · Tailwind CSS · Supabase (Postgres + Auth + RLS) · Zod · Recharts · Vitest.
+
+Arquitectura por módulos (`domain` / `application` / `presentation`), lógica de
+negocio cubierta con tests y reglas de seguridad a nivel de base de datos (RLS).
+
+## Estado
+
+Sistema funcional y en uso. Este repositorio se comparte como muestra de trabajo.
+
+## Ejecución
+
+> ⚠️ Este proyecto **no funciona con solo clonarlo**: requiere una instancia
+> propia de Supabase y credenciales privadas que **no se incluyen** en el
+> repositorio. Sin ellas, la aplicación no arranca.
+
+Para una instalación propia se necesita un archivo `.env.local` (ver
+[`.env.local.example`](.env.local.example)) con las claves de un proyecto
+Supabase, aplicar las migraciones de `supabase/migrations/` y luego:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Autor
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Daniel Vanegas — 2026. Todos los derechos reservados.
