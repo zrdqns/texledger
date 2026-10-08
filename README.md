@@ -1,47 +1,47 @@
-# TexLedger — Sistema contable textil
+# TexLedger — Textile accounting system
 
-Plataforma web para la gestión contable y operativa de una empresa de manufactura
-textil colombiana: inventario de telas, pedidos de producción, contabilidad,
-nómina y recordatorios, en un solo panel.
+Web platform for the accounting and operations of a Colombian textile manufacturing
+company: fabric inventory, production orders, accounting, payroll and reminders, in
+a single dashboard.
 
-> **Proyecto de portafolio.** El código es visible para evaluación, pero su uso
-> está restringido. Ver [LICENSE](LICENSE): *Todos los derechos reservados*.
+> **Portfolio project.** The code is visible for evaluation, but its use is
+> restricted. See [LICENSE](LICENSE): *All rights reserved*.
 
-## Módulos
+## Modules
 
-- **Dashboard** — resultado neto del mes, indicadores, gráfico de rendimiento y movimientos recientes.
-- **Inventario** — telas por rollos/metraje, alertas de bajo stock, importación desde Excel.
-- **Pedidos** — conciliación de tela por pedido de producción (consumo vs. saldo).
-- **Contabilidad** — ingresos, egresos, facturas, cuentas y reportes.
-- **Nómina** — empleados, parámetros por año y liquidaciones con desprendible imprimible.
-- **Recordatorios y notificaciones** — vencimientos de facturas, bajo stock y pendientes.
+- **Dashboard** — net result for the month, indicators, performance chart and recent transactions.
+- **Inventory** — fabrics by roll/length, low-stock alerts, import from Excel.
+- **Orders** — fabric reconciliation per production order (consumption vs. balance).
+- **Accounting** — income, expenses, invoices, accounts and reports.
+- **Payroll** — employees, per-year parameters and payslips with a printable pay stub.
+- **Reminders and notifications** — invoice due dates, low stock and pending items.
 
 ## Stack
 
 Next.js (App Router) · React · TypeScript · Tailwind CSS · Supabase (Postgres + Auth + RLS) · Zod · Recharts · Vitest.
 
-Arquitectura por módulos (`domain` / `application` / `presentation`), lógica de
-negocio cubierta con tests y reglas de seguridad a nivel de base de datos (RLS).
+Module-based architecture (`domain` / `application` / `presentation`), business
+logic covered by tests and security rules at the database level (RLS).
 
-## Estado
+## Status
 
-Sistema funcional y en uso. Este repositorio se comparte como muestra de trabajo.
+Working system, in use. This repository is shared as a work sample.
 
-## Ejecución
+## Running
 
-> ⚠️ Este proyecto **no funciona con solo clonarlo**: requiere una instancia
-> propia de Supabase y credenciales privadas que **no se incluyen** en el
-> repositorio. Sin ellas, la aplicación no arranca.
+> ⚠️ This project **does not work just by cloning it**: it requires your own
+> Supabase instance and private credentials that are **not included** in the
+> repository. Without them, the application does not start.
 
-Para una instalación propia se necesita un archivo `.env.local` (ver
-[`.env.local.example`](.env.local.example)) con las claves de un proyecto
-Supabase, aplicar las migraciones de `supabase/migrations/` y luego:
+A self-hosted install needs a `.env.local` file (see
+[`.env.local.example`](.env.local.example)) with the keys of a Supabase
+project, the migrations in `supabase/migrations/` applied, and then:
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Autor
+## Author
 
-Daniel Vanegas — 2026. Todos los derechos reservados.
+Daniel Vanegas — 2026. All rights reserved.
